@@ -1,4 +1,6 @@
 import { featuredWork, getCategories, works } from './works';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 
 describe('portfolio works data', () => {
   it('contains complete work entries for gallery rendering', () => {
@@ -20,5 +22,12 @@ describe('portfolio works data', () => {
 
   it('returns sorted unique categories with All first', () => {
     expect(getCategories()).toEqual(['All', 'Branding', 'Design', 'Photography', 'UI']);
+  });
+
+  it('points every work at an existing public image asset', () => {
+    for (const work of works) {
+      const assetPath = join(process.cwd(), 'public', work.image.replace(/^\//, ''));
+      expect(existsSync(assetPath), `${work.image} should exist`).toBe(true);
+    }
   });
 });
