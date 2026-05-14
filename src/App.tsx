@@ -1,39 +1,130 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { About } from './components/About';
 import { BackToTopButton } from './components/BackToTopButton';
+import { FloatingHeader } from './components/FloatingHeader';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { WorkDetail } from './components/WorkDetail';
 import { WorkGallery } from './components/WorkGallery';
+import { WorkProjectPage } from './components/WorkProjectPage';
 import { featuredWork, getCategories, works, type Work } from './data/works';
 import type { Language } from './i18n';
 import './styles.css';
 
+function scrollToTop() {
+  if (navigator.userAgent.includes('jsdom')) {
+    return;
+  }
+
+  try {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch {
+    window.scrollTo(0, 0);
+  }
+}
+
 export default function App() {
-  const [language, setLanguage] = useState<Language>('en');
+  const [language, setLanguage] = useState<Language>('zh');
   const [activeCategory, setActiveCategory] = useState('All');
   const [selectedWork, setSelectedWork] = useState<Work | null>(null);
+  const [detailWork, setDetailWork] = useState<Work | null>(null);
   const categories = useMemo(() => getCategories(), []);
+  const selectedWorkIndex = selectedWork
+    ? works.findIndex((work) => work.id === selectedWork.id)
+    : -1;
+
+  const showPreviousWork = () => {
+    if (selectedWorkIndex < 0) {
+      return;
+    }
+
+    const previousIndex = selectedWorkIndex === 0 ? works.length - 1 : selectedWorkIndex - 1;
+    setSelectedWork(works[previousIndex]);
+  };
+
+  const openProjectDetail = () => {
+    if (!selectedWork) {
+      return;
+    }
+
+    setDetailWork(selectedWork);
+    setSelectedWork(null);
+    scrollToTop();
+  };
+
+  const closeProjectDetail = () => {
+    setDetailWork(null);
+    scrollToTop();
+  };
+
+  const showNextWork = () => {
+    if (selectedWorkIndex < 0) {
+      return;
+    }
+
+    setSelectedWork(works[(selectedWorkIndex + 1) % works.length]);
+  };
+
+  useEffect(() => {
+    const preventDefault = (event: Event) => {
+      event.preventDefault();
+    };
+
+    document.body.classList.add('content-protected');
+    document.addEventListener('contextmenu', preventDefault);
+    document.addEventListener('copy', preventDefault);
+    document.addEventListener('cut', preventDefault);
+    document.addEventListener('dragstart', preventDefault);
+
+    return () => {
+      document.body.classList.remove('content-protected');
+      document.removeEventListener('contextmenu', preventDefault);
+      document.removeEventListener('copy', preventDefault);
+      document.removeEventListener('cut', preventDefault);
+      document.removeEventListener('dragstart', preventDefault);
+    };
+  }, []);
 
   return (
     <div id="top" className="site-shell" lang={language === 'zh' ? 'zh-CN' : 'en'}>
       <Header
+        includeHome={Boolean(detailWork)}
         language={language}
+        onHome={closeProjectDetail}
         onToggleLanguage={() => setLanguage((current) => (current === 'en' ? 'zh' : 'en'))}
       />
-      <main>
-        <Hero featuredWork={featuredWork} language={language} onSelectWork={setSelectedWork} />
-        <WorkGallery
-          activeCategory={activeCategory}
-          categories={categories}
+      {!detailWork && !selectedWork ? (
+        <FloatingHeader
           language={language}
-          works={works}
-          onCategoryChange={setActiveCategory}
-          onSelectWork={setSelectedWork}
+          onToggleLanguage={() => setLanguage((current) => (current === 'en' ? 'zh' : 'en'))}
         />
-      </main>
-      <About language={language} />
-      <WorkDetail work={selectedWork} language={language} onClose={() => setSelectedWork(null)} />
+      ) : null}
+      {detailWork ? (
+        <WorkProjectPage language={language} work={detailWork} onBack={closeProjectDetail} />
+      ) : (
+        <>
+          <main>
+            <Hero featuredWork={featuredWork} language={language} onSelectWork={setSelectedWork} />
+            <WorkGallery
+              activeCategory={activeCategory}
+              categories={categories}
+              language={language}
+              works={works}
+              onCategoryChange={setActiveCategory}
+              onSelectWork={setSelectedWork}
+            />
+          </main>
+          <About language={language} />
+        </>
+      )}
+      <WorkDetail
+        work={selectedWork}
+        language={language}
+        onClose={() => setSelectedWork(null)}
+        onNextWork={showNextWork}
+        onOpenDetail={openProjectDetail}
+        onPreviousWork={showPreviousWork}
+      />
       <BackToTopButton language={language} />
     </div>
   );

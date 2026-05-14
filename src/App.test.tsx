@@ -1,48 +1,155 @@
-import { act, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
+import { works } from './data/works';
+
+const firstWork = works[0];
 
 describe('portfolio app', () => {
   it('renders the editorial portfolio structure', () => {
     render(<App />);
 
     expect(screen.getByRole('banner')).toHaveTextContent('YOUR NAME');
-    expect(screen.getByRole('heading', { name: /Selected works/i })).toBeInTheDocument();
-    expect(screen.getByRole('navigation', { name: /Primary/i })).toBeInTheDocument();
-    expect(screen.getByRole('region', { name: /Work gallery/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '精选作品' })).toBeInTheDocument();
+    expect(screen.getByText('以安静而笃定的方式呈现。')).toBeInTheDocument();
+    expect(screen.getByRole('navigation', { name: /主导航/i })).toBeInTheDocument();
+    expect(within(screen.getByRole('navigation', { name: /主导航/i })).queryByText('首页')).not.toBeInTheDocument();
+    expect(screen.getByRole('region', { name: /作品画廊/i })).toBeInTheDocument();
     expect(screen.getByRole('contentinfo')).toHaveTextContent('hello@example.com');
+  });
+
+  it('presents an anonymized professional profile from the resume', () => {
+    render(<App />);
+    const about = screen.getByRole('contentinfo');
+
+    expect(within(about).getByRole('heading', { name: '视觉设计师' })).toBeInTheDocument();
+    expect(about).toHaveTextContent('专注品牌传播、数字界面与线下活动视觉系统。');
+    expect(about).toHaveTextContent('品牌传播');
+    expect(about).toHaveTextContent('数字界面');
+    expect(about).toHaveTextContent('项目经历');
+    expect(about).not.toHaveTextContent('金鑫');
+    expect(about).not.toHaveTextContent('18088680814');
+    expect(about).not.toHaveTextContent('长春');
+    expect(about).not.toHaveTextContent('2018');
+    expect(about).not.toHaveTextContent('北京百孚思');
+  });
+
+  it('visually marks the profile column with a character and unified section icons', () => {
+    const { container } = render(<App />);
+    const about = screen.getByRole('contentinfo');
+    const character = within(about).getByRole('img', { name: /虚拟人物形象/i });
+
+    expect(character).toHaveAttribute('src', '/profile-character.png');
+    expect(container.querySelector('.about-portrait')).toBeInTheDocument();
+    expect(container.querySelectorAll('.about-icon')).toHaveLength(6);
   });
 
   it('filters works by category and can reset to all works', async () => {
     const user = userEvent.setup();
     render(<App />);
 
-    await user.click(screen.getByRole('button', { name: 'Photography' }));
-    const gallery = screen.getByRole('region', { name: /Work gallery/i });
+    await user.click(screen.getByRole('button', { name: '数字体验' }));
+    const gallery = screen.getByRole('region', { name: /作品画廊/i });
+    const digitalWorks = works.filter((work) => work.category === 'Digital');
 
-    expect(within(gallery).getAllByRole('button', { name: /Open project/i })).toHaveLength(2);
-    expect(within(gallery).getByText('Lumen Objects')).toBeInTheDocument();
-    expect(within(gallery).queryByText('Northline UI')).not.toBeInTheDocument();
+    expect(within(gallery).getAllByRole('button', { name: /打开项目/i })).toHaveLength(
+      digitalWorks.length
+    );
+    expect(within(gallery).getByText(digitalWorks[0].titleZh)).toBeInTheDocument();
+    expect(within(gallery).queryByText(firstWork.titleZh)).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: 'All' }));
-    expect(within(gallery).getAllByRole('button', { name: /Open project/i })).toHaveLength(6);
+    await user.click(screen.getByRole('button', { name: '全部' }));
+    expect(within(gallery).getAllByRole('button', { name: /打开项目/i })).toHaveLength(works.length);
   });
 
-  it('opens and closes work details without leaving the page', async () => {
+  it('opens and closes a lightweight work preview without leaving the page', async () => {
     const user = userEvent.setup();
     render(<App />);
 
-    await user.click(screen.getByRole('button', { name: /Open project Quiet Forms/i }));
-    const dialog = screen.getByRole('dialog', { name: /Quiet Forms/i });
+    await user.click(screen.getByRole('button', { name: `打开项目 ${firstWork.titleZh}` }));
+    const dialog = screen.getByRole('dialog', { name: firstWork.titleZh });
 
     expect(dialog).toHaveTextContent('2026');
-    expect(dialog).toHaveTextContent('Design');
-    expect(within(dialog).getByRole('link', { name: /View project/i })).toHaveAttribute(
-      'href',
-      'https://example.com'
+    expect(dialog).toHaveTextContent(firstWork.descriptionZh);
+    expect(within(dialog).getByRole('img', { name: firstWork.titleZh })).toHaveAttribute(
+      'src',
+      firstWork.image
     );
+    expect(within(dialog).getByRole('button', { name: /查看详情/i })).toBeInTheDocument();
 
-    await user.click(within(dialog).getByRole('button', { name: /Close project details/i }));
+    await user.click(within(dialog).getByRole('button', { name: /关闭项目详情/i }));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('keeps project navigation buttons outside the preview dialog', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole('button', { name: `打开项目 ${firstWork.titleZh}` }));
+    const dialog = screen.getByRole('dialog', { name: firstWork.titleZh });
+
+    expect(within(dialog).queryByRole('button', { name: /下一个项目/i })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /下一个项目/i })).toBeInTheDocument();
+  });
+
+  it('switches between projects from the preview overlay controls', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole('button', { name: `打开项目 ${firstWork.titleZh}` }));
+
+    await user.click(screen.getByRole('button', { name: /下一个项目/i }));
+
+    expect(screen.getByRole('dialog', { name: works[1].titleZh })).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: new RegExp(works[1].titleZh) })).toHaveAttribute(
+      'src',
+      works[1].image
+    );
+  });
+
+  it('opens a project detail page with a full-width banner and ordered project images', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole('button', { name: `打开项目 ${firstWork.titleZh}` }));
+    await user.click(screen.getByRole('button', { name: /查看详情/i }));
+
+    const detailPage = screen.getByTestId('project-detail-page');
+    const imageStack = within(detailPage).getByRole('region', { name: firstWork.titleZh });
+    const projectImages = within(imageStack).getAllByRole('img', {
+      name: new RegExp(firstWork.titleZh)
+    });
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(detailPage.querySelector('.project-detail-frame')).toBeInTheDocument();
+    expect(within(detailPage).getByRole('banner')).toHaveClass('project-detail-hero');
+    expect(within(detailPage).getByRole('banner')).toHaveClass('full-bleed');
+    expect(within(detailPage).getByRole('heading', { name: firstWork.titleZh })).toBeInTheDocument();
+    expect(within(screen.getByRole('navigation', { name: /主导航/i })).getByText('首页')).toBeInTheDocument();
+    expect(projectImages.map((image) => image.getAttribute('src'))).toEqual(firstWork.images);
+  });
+
+  it('uses full-image snap panels inside the project detail page', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<App />);
+
+    await user.click(screen.getByRole('button', { name: `打开项目 ${firstWork.titleZh}` }));
+    await user.click(screen.getByRole('button', { name: /查看详情/i }));
+
+    expect(screen.getByTestId('project-detail-page')).toHaveClass('detail-scroll');
+    expect(container.querySelector('.project-image-stack')).toHaveClass('snap-scroll');
+    expect(container.querySelector('.project-image-stack')).not.toHaveClass('internal-scroll');
+    expect(container.querySelectorAll('.project-image-panel')).toHaveLength(firstWork.images.length);
+  });
+
+  it('closes work details when clicking the empty backdrop area', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole('button', { name: `打开项目 ${firstWork.titleZh}` }));
+
+    await user.click(screen.getByTestId('detail-backdrop'));
+
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
@@ -50,19 +157,20 @@ describe('portfolio app', () => {
     const user = userEvent.setup();
     render(<App />);
 
-    expect(screen.getByRole('heading', { name: /Selected works/i })).toBeInTheDocument();
-
-    await user.click(screen.getByRole('button', { name: '中文' }));
-
     expect(screen.getByRole('heading', { name: /精选作品/i })).toBeInTheDocument();
-    expect(screen.getByRole('navigation', { name: /主导航/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '摄影' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'EN' })).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'EN' }));
 
     expect(screen.getByRole('heading', { name: /Selected works/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Photography' })).toBeInTheDocument();
+    expect(screen.getByRole('navigation', { name: /Primary/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Digital' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '中文' })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: '中文' }));
+
+    expect(screen.getByRole('heading', { name: /精选作品/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '数字体验' })).toBeInTheDocument();
   });
 
   it('shows a floating back-to-top button after scrolling and scrolls to the top', async () => {
@@ -73,15 +181,63 @@ describe('portfolio app', () => {
 
     render(<App />);
 
-    expect(screen.queryByRole('button', { name: /Back to top/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /返回顶部/i })).not.toBeInTheDocument();
 
     act(() => {
       window.scrollY = 520;
       window.dispatchEvent(new Event('scroll'));
     });
 
-    await user.click(await screen.findByRole('button', { name: /Back to top/i }));
+    await user.click(await screen.findByRole('button', { name: /返回顶部/i }));
 
     expect(scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
+  });
+
+  it('shows an animated fixed menu only after the page scrolls', () => {
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 0, writable: true });
+
+    render(<App />);
+
+    expect(screen.getByRole('navigation', { name: /主导航/i })).toBeInTheDocument();
+    expect(screen.queryByRole('navigation', { name: /滚动固定导航/i })).not.toBeInTheDocument();
+
+    act(() => {
+      window.scrollY = 220;
+      window.dispatchEvent(new Event('scroll'));
+    });
+
+    expect(screen.getByRole('navigation', { name: /滚动固定导航/i })).toBeInTheDocument();
+    expect(screen.getByTestId('floating-header')).toHaveClass('is-visible');
+  });
+
+  it('does not show the floating menu while a preview dialog or detail page is active', async () => {
+    const user = userEvent.setup();
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 220, writable: true });
+
+    render(<App />);
+
+    act(() => {
+      window.dispatchEvent(new Event('scroll'));
+    });
+    expect(screen.getByRole('navigation', { name: /滚动固定导航/i })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: `打开项目 ${firstWork.titleZh}` }));
+    expect(screen.queryByRole('navigation', { name: /滚动固定导航/i })).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: /查看详情/i }));
+    expect(screen.queryByRole('navigation', { name: /滚动固定导航/i })).not.toBeInTheDocument();
+  });
+
+  it('blocks common copy, context menu, and image drag actions', () => {
+    render(<App />);
+
+    expect(document.body).toHaveClass('content-protected');
+    expect(fireEvent.contextMenu(document)).toBe(false);
+    expect(fireEvent.copy(document)).toBe(false);
+    expect(fireEvent.cut(document)).toBe(false);
+
+    const firstImage = document.querySelector('img');
+    expect(firstImage).toHaveAttribute('draggable', 'false');
+    expect(fireEvent.dragStart(firstImage!)).toBe(false);
   });
 });

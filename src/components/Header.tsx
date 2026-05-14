@@ -2,11 +2,13 @@ import type { Language } from '../i18n';
 import { copy } from '../i18n';
 
 type HeaderProps = {
+  includeHome?: boolean;
   language: Language;
+  onHome?: () => void;
   onToggleLanguage: () => void;
 };
 
-export function Header({ language, onToggleLanguage }: HeaderProps) {
+export function Header({ includeHome = false, language, onHome, onToggleLanguage }: HeaderProps) {
   const text = copy[language];
 
   return (
@@ -15,6 +17,11 @@ export function Header({ language, onToggleLanguage }: HeaderProps) {
         YOUR NAME
       </a>
       <nav className="site-nav" aria-label={text.navLabel}>
+        {includeHome ? (
+          <button className="nav-button" type="button" onClick={onHome}>
+            {text.nav.home}
+          </button>
+        ) : null}
         <a href="#work">{text.nav.work}</a>
         <a href="#about">{text.nav.about}</a>
         <a href="#contact">{text.nav.contact}</a>

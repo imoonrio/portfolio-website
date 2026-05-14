@@ -1,4 +1,4 @@
-export type WorkCategory = 'Branding' | 'Design' | 'Photography' | 'UI';
+export type WorkCategory = 'Brand' | 'Campaign' | 'Digital' | 'Event' | 'Print';
 
 export type Work = {
   id: string;
@@ -9,78 +9,187 @@ export type Work = {
   description: string;
   descriptionZh: string;
   image: string;
+  images: string[];
+  sourcePath?: string;
   featured?: boolean;
   link?: string;
 };
 
 export const works: Work[] = [
   {
-    id: 'quiet-forms',
-    title: 'Quiet Forms',
-    titleZh: '静默形态',
-    category: 'Design',
+    id: 'skincare-packaging',
+    title: 'Skincare Packaging System',
+    titleZh: '护肤产品包装设计及延展',
+    category: 'Print',
     year: '2026',
     description:
-      'An editorial identity system built around spacious layouts, tactile imagery, and restrained typographic contrast.',
-    descriptionZh: '一套以留白版式、触感图像和克制字体对比构建的杂志式视觉识别系统。',
-    image: '/works/quiet-forms.svg',
-    featured: true,
-    link: 'https://example.com'
+      'A skincare packaging and extension system covering product presentation, visual rhythm, and refined material-led communication.',
+    descriptionZh: '围绕护肤产品包装与延展视觉建立的系列方案，强调产品呈现、版式节奏与精致的材质表达。',
+    image: '/works/new/skincare-packaging/01.png',
+    images: [
+      '/works/new/skincare-packaging/01.png',
+      '/works/new/skincare-packaging/02.png',
+      '/works/new/skincare-packaging/03.png',
+      '/works/new/skincare-packaging/04.png',
+      '/works/new/skincare-packaging/05.png',
+      '/works/new/skincare-packaging/06.png',
+      '/works/new/skincare-packaging/07.png'
+    ],
+    featured: true
   },
   {
-    id: 'lumen-objects',
-    title: 'Lumen Objects',
-    titleZh: '流光物件',
-    category: 'Photography',
+    id: 'skincare-brochure',
+    title: 'Skincare Brochure Design',
+    titleZh: '护肤画册设计',
+    category: 'Print',
     year: '2026',
     description:
-      'A luminous product photography series using warm light, reflective surfaces, and close-cropped composition.',
-    descriptionZh: '一组以暖光、反射材质和近距离构图呈现的产品摄影系列。',
-    image: '/works/lumen-objects.svg'
+      'A brochure design project for skincare communication, balancing product information, editorial pacing, and clean visual hierarchy.',
+    descriptionZh: '面向护肤品传播的画册设计项目，在产品信息、阅读节奏与清爽视觉层级之间建立平衡。',
+    image: '/works/new/skincare-brochure/01.png',
+    images: [
+      '/works/new/skincare-brochure/01.png',
+      '/works/new/skincare-brochure/02.png',
+      '/works/new/skincare-brochure/03.png',
+      '/works/new/skincare-brochure/04.png',
+      '/works/new/skincare-brochure/05.png',
+      '/works/new/skincare-brochure/06.png'
+    ]
   },
   {
-    id: 'northline-ui',
-    title: 'Northline UI',
-    titleZh: '北线界面',
-    category: 'UI',
-    year: '2025',
+    id: 'winter-solar-term-posters',
+    title: 'Winter Solar Term Composite Posters',
+    titleZh: '解放动力冬季节气创意合成海报设计',
+    category: 'Campaign',
+    year: '2026',
     description:
-      'A polished interface concept for a studio dashboard with dense project information and calm interaction states.',
-    descriptionZh: '一个面向工作室仪表盘的界面概念，兼顾高密度项目信息与平静的交互状态。',
-    image: '/works/northline-ui.svg'
+      'A seasonal poster series built with composite imagery, atmospheric storytelling, and consistent brand-led visual cues.',
+    descriptionZh: '冬季节气主题的创意合成海报系列，以场景化叙事、氛围塑造和统一品牌视觉线索组织画面。',
+    image: '/works/new/winter-solar-term-posters/01.png',
+    images: [
+      '/works/new/winter-solar-term-posters/01.png',
+      '/works/new/winter-solar-term-posters/02.png',
+      '/works/new/winter-solar-term-posters/03.png',
+      '/works/new/winter-solar-term-posters/04.png',
+      '/works/new/winter-solar-term-posters/05.png',
+      '/works/new/winter-solar-term-posters/06.png',
+      '/works/new/winter-solar-term-posters/07.png',
+      '/works/new/winter-solar-term-posters/08.png',
+      '/works/new/winter-solar-term-posters/09.png',
+      '/works/new/winter-solar-term-posters/10.png'
+    ]
   },
   {
-    id: 'soft-grid',
-    title: 'Soft Grid',
-    titleZh: '柔性网格',
-    category: 'Branding',
-    year: '2025',
+    id: 'jiefang-experience-officer-identity',
+    title: 'Experience Officer Logo and Visual Identity',
+    titleZh: '解放体验官Logo及品牌视觉识别系统',
+    category: 'Brand',
+    year: '2026',
     description:
-      'A flexible visual language for a boutique creative practice, pairing structured grids with expressive imagery.',
-    descriptionZh: '为精品创意实践打造的灵活视觉语言，将结构化网格与富有表现力的图像结合。',
-    image: '/works/soft-grid.svg'
+      'A logo and identity system for a brand-facing experience role, extending from symbol logic to practical visual applications.',
+    descriptionZh: '围绕体验官角色建立的 Logo 与品牌视觉识别系统，从标志逻辑延展到多场景应用表达。',
+    image: '/works/new/jiefang-experience-officer-identity/01.png',
+    images: [
+      '/works/new/jiefang-experience-officer-identity/01.png',
+      '/works/new/jiefang-experience-officer-identity/02.png',
+      '/works/new/jiefang-experience-officer-identity/03.png',
+      '/works/new/jiefang-experience-officer-identity/04.png',
+      '/works/new/jiefang-experience-officer-identity/05.png',
+      '/works/new/jiefang-experience-officer-identity/06.png'
+    ]
   },
   {
-    id: 'paper-room',
-    title: 'Paper Room',
-    titleZh: '纸间',
-    category: 'Photography',
-    year: '2024',
+    id: 'jiefangxing-app-visual-system',
+    title: 'Jiefangxing App Visual System',
+    titleZh: '解放行APP界面视觉识别系统',
+    category: 'Digital',
+    year: '2026',
     description:
-      'A quiet interior series focused on paper texture, daylight, and the subtle rhythm of everyday working spaces.',
-    descriptionZh: '一组安静的室内摄影，关注纸张纹理、自然光和日常工作空间的细微节奏。',
-    image: '/works/paper-room.svg'
+      'A mobile interface visual system with screen layouts, operational content, and a consistent digital brand expression.',
+    descriptionZh: '围绕移动端界面建立的视觉识别系统，覆盖页面布局、运营内容与统一的数字品牌表达。',
+    image: '/works/new/jiefangxing-app-visual-system/01.png',
+    images: [
+      '/works/new/jiefangxing-app-visual-system/01.png',
+      '/works/new/jiefangxing-app-visual-system/02.png',
+      '/works/new/jiefangxing-app-visual-system/03.png',
+      '/works/new/jiefangxing-app-visual-system/04.png',
+      '/works/new/jiefangxing-app-visual-system/05.png',
+      '/works/new/jiefangxing-app-visual-system/06.png',
+      '/works/new/jiefangxing-app-visual-system/07.png',
+      '/works/new/jiefangxing-app-visual-system/08.png',
+      '/works/new/jiefangxing-app-visual-system/09.png',
+      '/works/new/jiefangxing-app-visual-system/10.png',
+      '/works/new/jiefangxing-app-visual-system/11.png',
+      '/works/new/jiefangxing-app-visual-system/12.png',
+      '/works/new/jiefangxing-app-visual-system/13.png',
+      '/works/new/jiefangxing-app-visual-system/14.png',
+      '/works/new/jiefangxing-app-visual-system/15.png',
+      '/works/new/jiefangxing-app-visual-system/16.png'
+    ]
   },
   {
-    id: 'signal-archive',
-    title: 'Signal Archive',
-    titleZh: '信号档案',
-    category: 'Design',
-    year: '2024',
+    id: 'jiefang-night-event-visual',
+    title: 'Jiefang Night Event Visual System',
+    titleZh: '解放之夜线下活动视觉设计',
+    category: 'Event',
+    year: '2026',
     description:
-      'A compact archive system for visual research, designed to make image-heavy collections easy to scan and compare.',
-    descriptionZh: '一个用于视觉研究的紧凑档案系统，让大量图像资料更容易浏览、比较和管理。',
-    image: '/works/signal-archive.svg'
+      'An offline event visual system for stage atmosphere, campaign identity, and supporting materials across the event journey.',
+    descriptionZh: '面向线下活动场景的视觉系统，覆盖舞台氛围、活动识别与现场传播物料延展。',
+    image: '/works/new/jiefang-night-event-visual/01.png',
+    images: [
+      '/works/new/jiefang-night-event-visual/01.png',
+      '/works/new/jiefang-night-event-visual/02.png',
+      '/works/new/jiefang-night-event-visual/03.png',
+      '/works/new/jiefang-night-event-visual/04.png',
+      '/works/new/jiefang-night-event-visual/05.png',
+      '/works/new/jiefang-night-event-visual/06.png',
+      '/works/new/jiefang-night-event-visual/07.png',
+      '/works/new/jiefang-night-event-visual/08.png',
+      '/works/new/jiefang-night-event-visual/09.png',
+      '/works/new/jiefang-night-event-visual/10.png'
+    ]
+  },
+  {
+    id: 'hand-drawn-aroma-standee',
+    title: 'Hand-Drawn Aroma Standee',
+    titleZh: '手绘香薰主题展架',
+    category: 'Event',
+    year: '2026',
+    description:
+      'A hand-drawn aroma standee concept combining soft illustration, product mood, and approachable display communication.',
+    descriptionZh: '以手绘插画语言呈现香薰主题展架，将产品气质、陈列传播与亲和视觉表达结合。',
+    image: '/works/new/hand-drawn-aroma-standee/01.png',
+    images: [
+      '/works/new/hand-drawn-aroma-standee/01.png',
+      '/works/new/hand-drawn-aroma-standee/02.png',
+      '/works/new/hand-drawn-aroma-standee/03.png',
+      '/works/new/hand-drawn-aroma-standee/04.png',
+      '/works/new/hand-drawn-aroma-standee/05.png',
+      '/works/new/hand-drawn-aroma-standee/06.png',
+      '/works/new/hand-drawn-aroma-standee/07.png',
+      '/works/new/hand-drawn-aroma-standee/08.png'
+    ]
+  },
+  {
+    id: 'fairy-tale-picture-book',
+    title: 'Fairy Tale Picture Book Adaptation',
+    titleZh: '童话故事创意改编儿童绘本设计',
+    category: 'Print',
+    year: '2026',
+    description:
+      'A children’s picture book adaptation exploring narrative pacing, character-led scenes, and warm illustration-based storytelling.',
+    descriptionZh: '童话故事创意改编绘本设计，围绕叙事节奏、角色场景和温暖插画表达展开。',
+    image: '/works/new/fairy-tale-picture-book/01.png',
+    images: [
+      '/works/new/fairy-tale-picture-book/01.png',
+      '/works/new/fairy-tale-picture-book/02.png',
+      '/works/new/fairy-tale-picture-book/03.png',
+      '/works/new/fairy-tale-picture-book/04.png',
+      '/works/new/fairy-tale-picture-book/05.png',
+      '/works/new/fairy-tale-picture-book/06.png',
+      '/works/new/fairy-tale-picture-book/07.png'
+    ]
   }
 ];
 
