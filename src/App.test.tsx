@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 
@@ -44,5 +44,44 @@ describe('portfolio app', () => {
 
     await user.click(within(dialog).getByRole('button', { name: /Close project details/i }));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('switches the interface between English and Chinese', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    expect(screen.getByRole('heading', { name: /Selected works/i })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: '中文' }));
+
+    expect(screen.getByRole('heading', { name: /精选作品/i })).toBeInTheDocument();
+    expect(screen.getByRole('navigation', { name: /主导航/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '摄影' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'EN' })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'EN' }));
+
+    expect(screen.getByRole('heading', { name: /Selected works/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Photography' })).toBeInTheDocument();
+  });
+
+  it('shows a floating back-to-top button after scrolling and scrolls to the top', async () => {
+    const user = userEvent.setup();
+    const scrollTo = vi.fn();
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 0, writable: true });
+    Object.defineProperty(window, 'scrollTo', { configurable: true, value: scrollTo });
+
+    render(<App />);
+
+    expect(screen.queryByRole('button', { name: /Back to top/i })).not.toBeInTheDocument();
+
+    act(() => {
+      window.scrollY = 520;
+      window.dispatchEvent(new Event('scroll'));
+    });
+
+    await user.click(await screen.findByRole('button', { name: /Back to top/i }));
+
+    expect(scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
   });
 });
