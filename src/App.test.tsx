@@ -9,7 +9,7 @@ describe('portfolio app', () => {
   it('renders the editorial portfolio structure', () => {
     render(<App />);
 
-    expect(screen.getByRole('banner')).toHaveTextContent('YOUR NAME');
+    expect(screen.getByRole('banner')).toHaveTextContent('心月呈幅');
     expect(screen.getByRole('heading', { name: '精选作品' })).toBeInTheDocument();
     expect(screen.getByText('以安静而笃定的方式呈现。')).toBeInTheDocument();
     expect(screen.getByRole('navigation', { name: /主导航/i })).toBeInTheDocument();
@@ -39,7 +39,7 @@ describe('portfolio app', () => {
     const about = screen.getByRole('contentinfo');
     const character = within(about).getByRole('img', { name: /虚拟人物形象/i });
 
-    expect(character).toHaveAttribute('src', '/profile-character.png');
+    expect(character).toHaveAttribute('src', '/profile-character-preview.jpg');
     expect(container.querySelector('.about-portrait')).toBeInTheDocument();
     expect(container.querySelectorAll('.about-icon')).toHaveLength(6);
   });
@@ -79,6 +79,23 @@ describe('portfolio app', () => {
 
     await user.click(within(dialog).getByRole('button', { name: /关闭项目详情/i }));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('uses lightweight preview images for the gallery and featured cover', () => {
+    render(<App />);
+
+    expect(screen.getByRole('button', { name: `打开精选项目 ${firstWork.titleZh}` }).querySelector('img')).toHaveAttribute(
+      'src',
+      firstWork.previewImage
+    );
+    expect(screen.getByRole('button', { name: `打开项目 ${firstWork.titleZh}` }).querySelector('img')).toHaveAttribute(
+      'src',
+      firstWork.previewImage
+    );
+    expect(screen.getByRole('button', { name: `打开项目 ${firstWork.titleZh}` }).querySelector('img')).toHaveAttribute(
+      'loading',
+      'lazy'
+    );
   });
 
   it('keeps project navigation buttons outside the preview dialog', async () => {

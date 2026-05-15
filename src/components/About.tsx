@@ -72,7 +72,7 @@ function Icon({ name }: { name: IconName }) {
 function ProfilePortrait({ label }: { label: string }) {
   return (
     <figure className="about-portrait">
-      <img src="/profile-character.png" alt={label} draggable="false" />
+      <img src="/profile-character-preview.jpg" alt={label} draggable="false" loading="lazy" decoding="async" />
     </figure>
   );
 }

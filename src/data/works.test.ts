@@ -15,6 +15,7 @@ describe('portfolio works data', () => {
       expect(work.images.length).toBeGreaterThanOrEqual(1);
       expect(work.image).toBe(work.images[0]);
       expect(work.image).toMatch(/^\/works\/.+\.(jpg|jpeg|png|webp|svg)$/i);
+      expect(work.previewImage).toMatch(/^\/works\/previews\/.+\.jpg$/i);
     }
   });
 
@@ -34,6 +35,8 @@ describe('portfolio works data', () => {
         const assetPath = join(process.cwd(), 'public', image.replace(/^\//, ''));
         expect(existsSync(assetPath), `${image} should exist`).toBe(true);
       }
+      const previewPath = join(process.cwd(), 'public', work.previewImage.replace(/^\//, ''));
+      expect(existsSync(previewPath), `${work.previewImage} should exist`).toBe(true);
     }
   });
 

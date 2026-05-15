@@ -14,7 +14,7 @@ export function Header({ includeHome = false, language, onHome, onToggleLanguage
   return (
     <header className="site-header">
       <a className="brand" href="#top" aria-label={text.brandAria}>
-        YOUR NAME
+        心月呈幅
       </a>
       <nav className="site-nav" aria-label={text.navLabel}>
         {includeHome ? (

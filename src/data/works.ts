@@ -9,6 +9,7 @@ export type Work = {
   description: string;
   descriptionZh: string;
   image: string;
+  previewImage: string;
   images: string[];
   sourcePath?: string;
   featured?: boolean;
@@ -26,6 +27,7 @@ export const works: Work[] = [
       'A skincare packaging and extension system covering product presentation, visual rhythm, and refined material-led communication.',
     descriptionZh: '围绕护肤产品包装与延展视觉建立的系列方案，强调产品呈现、版式节奏与精致的材质表达。',
     image: '/works/new/skincare-packaging/01.png',
+    previewImage: '/works/previews/skincare-packaging.jpg',
     images: [
       '/works/new/skincare-packaging/01.png',
       '/works/new/skincare-packaging/02.png',
@@ -47,6 +49,7 @@ export const works: Work[] = [
       'A brochure design project for skincare communication, balancing product information, editorial pacing, and clean visual hierarchy.',
     descriptionZh: '面向护肤品传播的画册设计项目，在产品信息、阅读节奏与清爽视觉层级之间建立平衡。',
     image: '/works/new/skincare-brochure/01.png',
+    previewImage: '/works/previews/skincare-brochure.jpg',
     images: [
       '/works/new/skincare-brochure/01.png',
       '/works/new/skincare-brochure/02.png',
@@ -66,6 +69,7 @@ export const works: Work[] = [
       'A seasonal poster series built with composite imagery, atmospheric storytelling, and consistent brand-led visual cues.',
     descriptionZh: '冬季节气主题的创意合成海报系列，以场景化叙事、氛围塑造和统一品牌视觉线索组织画面。',
     image: '/works/new/winter-solar-term-posters/01.png',
+    previewImage: '/works/previews/winter-solar-term-posters.jpg',
     images: [
       '/works/new/winter-solar-term-posters/01.png',
       '/works/new/winter-solar-term-posters/02.png',
@@ -89,6 +93,7 @@ export const works: Work[] = [
       'A logo and identity system for a brand-facing experience role, extending from symbol logic to practical visual applications.',
     descriptionZh: '围绕体验官角色建立的 Logo 与品牌视觉识别系统，从标志逻辑延展到多场景应用表达。',
     image: '/works/new/jiefang-experience-officer-identity/01.png',
+    previewImage: '/works/previews/jiefang-experience-officer-identity.jpg',
     images: [
       '/works/new/jiefang-experience-officer-identity/01.png',
       '/works/new/jiefang-experience-officer-identity/02.png',
@@ -108,6 +113,7 @@ export const works: Work[] = [
       'A mobile interface visual system with screen layouts, operational content, and a consistent digital brand expression.',
     descriptionZh: '围绕移动端界面建立的视觉识别系统，覆盖页面布局、运营内容与统一的数字品牌表达。',
     image: '/works/new/jiefangxing-app-visual-system/01.png',
+    previewImage: '/works/previews/jiefangxing-app-visual-system.jpg',
     images: [
       '/works/new/jiefangxing-app-visual-system/01.png',
       '/works/new/jiefangxing-app-visual-system/02.png',
@@ -137,6 +143,7 @@ export const works: Work[] = [
       'An offline event visual system for stage atmosphere, campaign identity, and supporting materials across the event journey.',
     descriptionZh: '面向线下活动场景的视觉系统，覆盖舞台氛围、活动识别与现场传播物料延展。',
     image: '/works/new/jiefang-night-event-visual/01.png',
+    previewImage: '/works/previews/jiefang-night-event-visual.jpg',
     images: [
       '/works/new/jiefang-night-event-visual/01.png',
       '/works/new/jiefang-night-event-visual/02.png',
@@ -160,6 +167,7 @@ export const works: Work[] = [
       'A hand-drawn aroma standee concept combining soft illustration, product mood, and approachable display communication.',
     descriptionZh: '以手绘插画语言呈现香薰主题展架，将产品气质、陈列传播与亲和视觉表达结合。',
     image: '/works/new/hand-drawn-aroma-standee/01.png',
+    previewImage: '/works/previews/hand-drawn-aroma-standee.jpg',
     images: [
       '/works/new/hand-drawn-aroma-standee/01.png',
       '/works/new/hand-drawn-aroma-standee/02.png',
@@ -181,6 +189,7 @@ export const works: Work[] = [
       'A children’s picture book adaptation exploring narrative pacing, character-led scenes, and warm illustration-based storytelling.',
     descriptionZh: '童话故事创意改编绘本设计，围绕叙事节奏、角色场景和温暖插画表达展开。',
     image: '/works/new/fairy-tale-picture-book/01.png',
+    previewImage: '/works/previews/fairy-tale-picture-book.jpg',
     images: [
       '/works/new/fairy-tale-picture-book/01.png',
       '/works/new/fairy-tale-picture-book/02.png',

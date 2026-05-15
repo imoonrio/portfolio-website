@@ -24,7 +24,7 @@ export function Hero({ featuredWork, language, onSelectWork }: HeroProps) {
         onClick={() => onSelectWork(featuredWork)}
         aria-label={`${text.hero.featuredAria} ${title}`}
       >
-        <img src={featuredWork.image} alt="" draggable="false" />
+        <img src={featuredWork.previewImage} alt="" draggable="false" fetchPriority="high" />
         <span>
           <strong>{title}</strong>
           <small>

@@ -26,7 +26,7 @@ export const copy = {
     languageToggle: '中文',
     navLabel: 'Primary navigation',
     floatingNavLabel: 'Fixed scroll navigation',
-    brandAria: 'YOUR NAME home',
+    brandAria: '心月呈幅 home',
     nav: {
       home: 'Home',
       work: 'Work',
@@ -106,7 +106,7 @@ export const copy = {
     languageToggle: 'EN',
     navLabel: '主导航',
     floatingNavLabel: '滚动固定导航',
-    brandAria: 'YOUR NAME 首页',
+    brandAria: '心月呈幅 首页',
     nav: {
       home: '首页',
       work: '作品',

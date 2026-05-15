@@ -31,7 +31,7 @@ export function FloatingHeader({ language, onToggleLanguage }: FloatingHeaderPro
   return (
     <header className="floating-header is-visible" data-testid="floating-header">
       <a className="brand" href="#top" aria-label={text.brandAria}>
-        YOUR NAME
+        心月呈幅
       </a>
       <nav className="site-nav" aria-label={text.floatingNavLabel}>
         <a href="#work">{text.nav.work}</a>

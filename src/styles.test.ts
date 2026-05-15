@@ -36,7 +36,9 @@ describe('mobile responsive stylesheet', () => {
 
   it('stacks the mobile header controls instead of squeezing all navigation into one row', () => {
     expect(phoneRules).toMatch(/\.site-header,\s*\.floating-header\s*{[^}]*display:\s*grid;/s);
-    expect(phoneRules).toMatch(/\.site-nav\s*{[^}]*grid-column:\s*1 \/ -1;[^}]*overflow-x:\s*auto;/s);
+    expect(phoneRules).toMatch(/\.brand\s*{[^}]*grid-column:\s*1 \/ -1;/s);
+    expect(phoneRules).toMatch(/\.site-nav\s*{[^}]*grid-column:\s*1;[^}]*grid-row:\s*2;[^}]*overflow-x:\s*auto;/s);
+    expect(phoneRules).toMatch(/\.language-toggle\s*{[^}]*grid-column:\s*2;[^}]*grid-row:\s*2;/s);
   });
 
   it('uses fluid phone typography and image heights for the hero', () => {

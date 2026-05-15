@@ -20,7 +20,7 @@ export function WorkCard({ work, language, onSelect }: WorkCardProps) {
       aria-label={`${text.gallery.openProject} ${title}`}
     >
       <span className="work-image-wrap">
-        <img src={work.image} alt="" draggable="false" />
+        <img src={work.previewImage} alt="" draggable="false" loading="lazy" decoding="async" />
       </span>
       <span
         className="work-card-overlay"
