@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { About } from './components/About';
 import { BackToTopButton } from './components/BackToTopButton';
 import { FloatingHeader } from './components/FloatingHeader';
@@ -7,9 +8,13 @@ import { Hero } from './components/Hero';
 import { WorkDetail } from './components/WorkDetail';
 import { WorkGallery } from './components/WorkGallery';
 import { WorkProjectPage } from './components/WorkProjectPage';
-import { featuredWork, getCategories, works, type Work } from './data/works';
+import { getCategories, works, type Work } from './data/works';
 import type { Language } from './i18n';
 import './styles.css';
+
+type ViewTransitionDocument = Document & {
+  startViewTransition?: (updateCallback: () => void) => void;
+};
 
 function scrollToTop() {
   if (navigator.userAgent.includes('jsdom')) {
@@ -42,12 +47,38 @@ export default function App() {
     setSelectedWork(works[previousIndex]);
   };
 
+  const changeCategory = (category: string) => {
+    if (category === activeCategory) {
+      return;
+    }
+
+    const viewTransitionDocument = document as ViewTransitionDocument;
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+    if (reduceMotion || !viewTransitionDocument.startViewTransition) {
+      setActiveCategory(category);
+      return;
+    }
+
+    viewTransitionDocument.startViewTransition(() => {
+      flushSync(() => {
+        setActiveCategory(category);
+      });
+    });
+  };
+
   const openProjectDetail = () => {
     if (!selectedWork) {
       return;
     }
 
     setDetailWork(selectedWork);
+    setSelectedWork(null);
+    scrollToTop();
+  };
+
+  const openWorkDetail = (work: Work) => {
+    setDetailWork(work);
     setSelectedWork(null);
     scrollToTop();
   };
@@ -104,13 +135,13 @@ export default function App() {
       ) : (
         <>
           <main>
-            <Hero featuredWork={featuredWork} language={language} onSelectWork={setSelectedWork} />
+            <Hero language={language} works={works} onOpenWork={openWorkDetail} />
             <WorkGallery
               activeCategory={activeCategory}
               categories={categories}
               language={language}
               works={works}
-              onCategoryChange={setActiveCategory}
+              onCategoryChange={changeCategory}
               onSelectWork={setSelectedWork}
             />
           </main>

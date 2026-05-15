@@ -1,21 +1,32 @@
+import type { CSSProperties } from 'react';
 import type { Work } from '../data/works';
 import { categoryLabels, copy, type Language } from '../i18n';
 
 type WorkCardProps = {
+  animationIndex?: number;
   work: Work;
   language: Language;
   onSelect: (work: Work) => void;
 };
 
-export function WorkCard({ work, language, onSelect }: WorkCardProps) {
+type WorkCardStyle = CSSProperties & {
+  '--stagger-index': number;
+};
+
+export function WorkCard({ animationIndex = 0, work, language, onSelect }: WorkCardProps) {
   const text = copy[language];
   const title = language === 'zh' ? work.titleZh : work.title;
   const category = categoryLabels[language][work.category];
+  const cardStyle: WorkCardStyle = {
+    '--stagger-index': animationIndex,
+    viewTransitionName: `work-${work.id}`
+  };
 
   return (
     <button
       className="work-card"
       type="button"
+      style={cardStyle}
       onClick={() => onSelect(work)}
       aria-label={`${text.gallery.openProject} ${title}`}
     >
@@ -26,7 +37,7 @@ export function WorkCard({ work, language, onSelect }: WorkCardProps) {
         className="work-card-overlay"
         aria-hidden="true"
         data-title={title}
-        data-meta={`${category} / ${work.year}`}
+        data-meta={category}
       />
       <span className="work-card-meta">
         <strong>{title}</strong>

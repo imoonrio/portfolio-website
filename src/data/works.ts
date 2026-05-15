@@ -16,6 +16,18 @@ export type Work = {
   link?: string;
 };
 
+function optimizedAsset(folder: string, file: string) {
+  return `/works/optimized/${folder}/${file}`;
+}
+
+function optimizedImages(folder: string, prefix: string, count: number, start = 1) {
+  return Array.from({ length: count }, (_, index) => {
+    const imageIndex = String(start + index).padStart(2, '0');
+
+    return optimizedAsset(folder, `${prefix}_${imageIndex}.png`);
+  });
+}
+
 export const works: Work[] = [
   {
     id: 'skincare-packaging',
@@ -26,17 +38,9 @@ export const works: Work[] = [
     description:
       'A skincare packaging and extension system covering product presentation, visual rhythm, and refined material-led communication.',
     descriptionZh: '围绕护肤产品包装与延展视觉建立的系列方案，强调产品呈现、版式节奏与精致的材质表达。',
-    image: '/works/new/skincare-packaging/01.png',
-    previewImage: '/works/previews/skincare-packaging.jpg',
-    images: [
-      '/works/new/skincare-packaging/01.png',
-      '/works/new/skincare-packaging/02.png',
-      '/works/new/skincare-packaging/03.png',
-      '/works/new/skincare-packaging/04.png',
-      '/works/new/skincare-packaging/05.png',
-      '/works/new/skincare-packaging/06.png',
-      '/works/new/skincare-packaging/07.png'
-    ],
+    image: optimizedAsset('skincare-packaging', 'skincare_packaging_thumb_1_1.jpg'),
+    previewImage: optimizedAsset('skincare-packaging', 'skincare_packaging_thumb_2_3.jpg'),
+    images: optimizedImages('skincare-packaging', 'skincare_packaging', 7),
     featured: true
   },
   {
@@ -48,16 +52,9 @@ export const works: Work[] = [
     description:
       'A brochure design project for skincare communication, balancing product information, editorial pacing, and clean visual hierarchy.',
     descriptionZh: '面向护肤品传播的画册设计项目，在产品信息、阅读节奏与清爽视觉层级之间建立平衡。',
-    image: '/works/new/skincare-brochure/01.png',
-    previewImage: '/works/previews/skincare-brochure.jpg',
-    images: [
-      '/works/new/skincare-brochure/01.png',
-      '/works/new/skincare-brochure/02.png',
-      '/works/new/skincare-brochure/03.png',
-      '/works/new/skincare-brochure/04.png',
-      '/works/new/skincare-brochure/05.png',
-      '/works/new/skincare-brochure/06.png'
-    ]
+    image: optimizedAsset('skincare-brochure', 'skincare_brochure_thumb_1_1.png'),
+    previewImage: optimizedAsset('skincare-brochure', 'skincare_brochure_thumb_2_3.png'),
+    images: optimizedImages('skincare-brochure', 'skincare_brochure', 6)
   },
   {
     id: 'winter-solar-term-posters',
@@ -68,20 +65,9 @@ export const works: Work[] = [
     description:
       'A seasonal poster series built with composite imagery, atmospheric storytelling, and consistent brand-led visual cues.',
     descriptionZh: '冬季节气主题的创意合成海报系列，以场景化叙事、氛围塑造和统一品牌视觉线索组织画面。',
-    image: '/works/new/winter-solar-term-posters/01.png',
-    previewImage: '/works/previews/winter-solar-term-posters.jpg',
-    images: [
-      '/works/new/winter-solar-term-posters/01.png',
-      '/works/new/winter-solar-term-posters/02.png',
-      '/works/new/winter-solar-term-posters/03.png',
-      '/works/new/winter-solar-term-posters/04.png',
-      '/works/new/winter-solar-term-posters/05.png',
-      '/works/new/winter-solar-term-posters/06.png',
-      '/works/new/winter-solar-term-posters/07.png',
-      '/works/new/winter-solar-term-posters/08.png',
-      '/works/new/winter-solar-term-posters/09.png',
-      '/works/new/winter-solar-term-posters/10.png'
-    ]
+    image: optimizedAsset('winter-solar-term-posters', 'winter_posters_thumb_1_1.png'),
+    previewImage: optimizedAsset('winter-solar-term-posters', 'winter_posters_thumb_2_3.png'),
+    images: optimizedImages('winter-solar-term-posters', 'winter_posters', 10)
   },
   {
     id: 'jiefang-experience-officer-identity',
@@ -92,16 +78,9 @@ export const works: Work[] = [
     description:
       'A logo and identity system for a brand-facing experience role, extending from symbol logic to practical visual applications.',
     descriptionZh: '围绕体验官角色建立的 Logo 与品牌视觉识别系统，从标志逻辑延展到多场景应用表达。',
-    image: '/works/new/jiefang-experience-officer-identity/01.png',
-    previewImage: '/works/previews/jiefang-experience-officer-identity.jpg',
-    images: [
-      '/works/new/jiefang-experience-officer-identity/01.png',
-      '/works/new/jiefang-experience-officer-identity/02.png',
-      '/works/new/jiefang-experience-officer-identity/03.png',
-      '/works/new/jiefang-experience-officer-identity/04.png',
-      '/works/new/jiefang-experience-officer-identity/05.png',
-      '/works/new/jiefang-experience-officer-identity/06.png'
-    ]
+    image: optimizedAsset('jiefang-experience-officer-identity', 'jiefang_identity_thumb_1_1.png'),
+    previewImage: optimizedAsset('jiefang-experience-officer-identity', 'jiefang_identity_thumb_2_3.png'),
+    images: optimizedImages('jiefang-experience-officer-identity', 'jiefang_identity', 6)
   },
   {
     id: 'jiefangxing-app-visual-system',
@@ -112,26 +91,9 @@ export const works: Work[] = [
     description:
       'A mobile interface visual system with screen layouts, operational content, and a consistent digital brand expression.',
     descriptionZh: '围绕移动端界面建立的视觉识别系统，覆盖页面布局、运营内容与统一的数字品牌表达。',
-    image: '/works/new/jiefangxing-app-visual-system/01.png',
-    previewImage: '/works/previews/jiefangxing-app-visual-system.jpg',
-    images: [
-      '/works/new/jiefangxing-app-visual-system/01.png',
-      '/works/new/jiefangxing-app-visual-system/02.png',
-      '/works/new/jiefangxing-app-visual-system/03.png',
-      '/works/new/jiefangxing-app-visual-system/04.png',
-      '/works/new/jiefangxing-app-visual-system/05.png',
-      '/works/new/jiefangxing-app-visual-system/06.png',
-      '/works/new/jiefangxing-app-visual-system/07.png',
-      '/works/new/jiefangxing-app-visual-system/08.png',
-      '/works/new/jiefangxing-app-visual-system/09.png',
-      '/works/new/jiefangxing-app-visual-system/10.png',
-      '/works/new/jiefangxing-app-visual-system/11.png',
-      '/works/new/jiefangxing-app-visual-system/12.png',
-      '/works/new/jiefangxing-app-visual-system/13.png',
-      '/works/new/jiefangxing-app-visual-system/14.png',
-      '/works/new/jiefangxing-app-visual-system/15.png',
-      '/works/new/jiefangxing-app-visual-system/16.png'
-    ]
+    image: optimizedAsset('jiefangxing-app-visual-system', 'jiefang_app_thumb_1_1.png'),
+    previewImage: optimizedAsset('jiefangxing-app-visual-system', 'jiefang_app_thumb_2_3.png'),
+    images: optimizedImages('jiefangxing-app-visual-system', 'jiefang_app', 10, 7)
   },
   {
     id: 'jiefang-night-event-visual',
@@ -142,20 +104,9 @@ export const works: Work[] = [
     description:
       'An offline event visual system for stage atmosphere, campaign identity, and supporting materials across the event journey.',
     descriptionZh: '面向线下活动场景的视觉系统，覆盖舞台氛围、活动识别与现场传播物料延展。',
-    image: '/works/new/jiefang-night-event-visual/01.png',
-    previewImage: '/works/previews/jiefang-night-event-visual.jpg',
-    images: [
-      '/works/new/jiefang-night-event-visual/01.png',
-      '/works/new/jiefang-night-event-visual/02.png',
-      '/works/new/jiefang-night-event-visual/03.png',
-      '/works/new/jiefang-night-event-visual/04.png',
-      '/works/new/jiefang-night-event-visual/05.png',
-      '/works/new/jiefang-night-event-visual/06.png',
-      '/works/new/jiefang-night-event-visual/07.png',
-      '/works/new/jiefang-night-event-visual/08.png',
-      '/works/new/jiefang-night-event-visual/09.png',
-      '/works/new/jiefang-night-event-visual/10.png'
-    ]
+    image: optimizedAsset('jiefang-night-event-visual', 'jiefang_night_thumb_1_1.png'),
+    previewImage: optimizedAsset('jiefang-night-event-visual', 'jiefang_night_thumb_2_3.png'),
+    images: optimizedImages('jiefang-night-event-visual', 'jiefang_night', 10)
   },
   {
     id: 'hand-drawn-aroma-standee',
@@ -166,18 +117,9 @@ export const works: Work[] = [
     description:
       'A hand-drawn aroma standee concept combining soft illustration, product mood, and approachable display communication.',
     descriptionZh: '以手绘插画语言呈现香薰主题展架，将产品气质、陈列传播与亲和视觉表达结合。',
-    image: '/works/new/hand-drawn-aroma-standee/01.png',
-    previewImage: '/works/previews/hand-drawn-aroma-standee.jpg',
-    images: [
-      '/works/new/hand-drawn-aroma-standee/01.png',
-      '/works/new/hand-drawn-aroma-standee/02.png',
-      '/works/new/hand-drawn-aroma-standee/03.png',
-      '/works/new/hand-drawn-aroma-standee/04.png',
-      '/works/new/hand-drawn-aroma-standee/05.png',
-      '/works/new/hand-drawn-aroma-standee/06.png',
-      '/works/new/hand-drawn-aroma-standee/07.png',
-      '/works/new/hand-drawn-aroma-standee/08.png'
-    ]
+    image: optimizedAsset('hand-drawn-aroma-standee', 'aroma_standee_thumb_1_1.png'),
+    previewImage: optimizedAsset('hand-drawn-aroma-standee', 'aroma_standee_thumb_2_3.png'),
+    images: optimizedImages('hand-drawn-aroma-standee', 'aroma_standee', 8)
   },
   {
     id: 'fairy-tale-picture-book',
@@ -188,17 +130,9 @@ export const works: Work[] = [
     description:
       'A children’s picture book adaptation exploring narrative pacing, character-led scenes, and warm illustration-based storytelling.',
     descriptionZh: '童话故事创意改编绘本设计，围绕叙事节奏、角色场景和温暖插画表达展开。',
-    image: '/works/new/fairy-tale-picture-book/01.png',
-    previewImage: '/works/previews/fairy-tale-picture-book.jpg',
-    images: [
-      '/works/new/fairy-tale-picture-book/01.png',
-      '/works/new/fairy-tale-picture-book/02.png',
-      '/works/new/fairy-tale-picture-book/03.png',
-      '/works/new/fairy-tale-picture-book/04.png',
-      '/works/new/fairy-tale-picture-book/05.png',
-      '/works/new/fairy-tale-picture-book/06.png',
-      '/works/new/fairy-tale-picture-book/07.png'
-    ]
+    image: optimizedAsset('fairy-tale-picture-book', 'fairy_tale_book_thumb_1_1.png'),
+    previewImage: optimizedAsset('fairy-tale-picture-book', 'fairy_tale_book_thumb_2_3.png'),
+    images: optimizedImages('fairy-tale-picture-book', 'fairy_tale_book', 7)
   }
 ];
 

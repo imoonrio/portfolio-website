@@ -37,7 +37,8 @@ export const copy = {
       eyebrow: 'Independent portfolio',
       title: 'Selected works',
       text: 'Presented with quiet confidence.',
-      featuredAria: 'Open featured project'
+      featuredAria: 'Open featured project',
+      carouselAria: 'Featured work carousel controls'
     },
     gallery: {
       aria: 'Work gallery',
@@ -117,7 +118,8 @@ export const copy = {
       eyebrow: '个人作品集',
       title: '精选作品',
       text: '以安静而笃定的方式呈现。',
-      featuredAria: '打开精选项目'
+      featuredAria: '打开精选项目',
+      carouselAria: '精选作品轮播控制'
     },
     gallery: {
       aria: '作品画廊',

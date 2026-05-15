@@ -58,7 +58,7 @@ export function WorkDetail({
         </div>
         <div className="detail-copy">
           <p className="eyebrow">
-            {categoryLabels[language][work.category]} / {work.year}
+            {categoryLabels[language][work.category]}
           </p>
           <h2>{title}</h2>
           <p>{description}</p>

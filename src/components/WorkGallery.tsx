@@ -44,8 +44,14 @@ export function WorkGallery({
       </div>
       {filteredWorks.length > 0 ? (
         <div className="work-grid">
-          {filteredWorks.map((work) => (
-            <WorkCard key={work.id} work={work} language={language} onSelect={onSelectWork} />
+          {filteredWorks.map((work, index) => (
+            <WorkCard
+              key={`${activeCategory}-${work.id}`}
+              animationIndex={index}
+              work={work}
+              language={language}
+              onSelect={onSelectWork}
+            />
           ))}
         </div>
       ) : (

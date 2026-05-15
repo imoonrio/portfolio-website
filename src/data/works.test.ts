@@ -13,9 +13,10 @@ describe('portfolio works data', () => {
       expect(work.description.length).toBeGreaterThan(20);
       expect(work.descriptionZh.length).toBeGreaterThan(10);
       expect(work.images.length).toBeGreaterThanOrEqual(1);
-      expect(work.image).toBe(work.images[0]);
-      expect(work.image).toMatch(/^\/works\/.+\.(jpg|jpeg|png|webp|svg)$/i);
-      expect(work.previewImage).toMatch(/^\/works\/previews\/.+\.jpg$/i);
+      expect(work.image).toMatch(/^\/works\/optimized\/.+_thumb_1_1\.(jpg|jpeg|png|webp)$/i);
+      expect(work.previewImage).toMatch(/^\/works\/optimized\/.+_thumb_2_3\.(jpg|jpeg|png|webp)$/i);
+      expect(work.images.every((image) => image.includes('/works/optimized/'))).toBe(true);
+      expect(work.images.every((image) => !image.includes('_thumb_'))).toBe(true);
     }
   });
 
@@ -37,6 +38,8 @@ describe('portfolio works data', () => {
       }
       const previewPath = join(process.cwd(), 'public', work.previewImage.replace(/^\//, ''));
       expect(existsSync(previewPath), `${work.previewImage} should exist`).toBe(true);
+      const dialogPath = join(process.cwd(), 'public', work.image.replace(/^\//, ''));
+      expect(existsSync(dialogPath), `${work.image} should exist`).toBe(true);
     }
   });
 
@@ -53,7 +56,14 @@ describe('portfolio works data', () => {
       '童话故事创意改编儿童绘本设计'
     ]);
     expect(works.every((work) => work.images.length > 1)).toBe(true);
-    expect(works.every((work) => work.image.includes('/works/new/'))).toBe(true);
+    expect(works.every((work) => work.image.includes('/works/optimized/'))).toBe(true);
+  });
+
+  it('uses 2:3 thumbnails for closed gallery cards and 1:1 thumbnails for dialogs', () => {
+    for (const work of works) {
+      expect(work.previewImage).toContain('_thumb_2_3');
+      expect(work.image).toContain('_thumb_1_1');
+    }
   });
 
   it('uses complete image fitting in the detail dialog', () => {

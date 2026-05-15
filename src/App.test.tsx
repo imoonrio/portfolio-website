@@ -62,6 +62,30 @@ describe('portfolio app', () => {
     expect(within(gallery).getAllByRole('button', { name: /打开项目/i })).toHaveLength(works.length);
   });
 
+  it('uses view transitions when switching work filters in supporting browsers', async () => {
+    const user = userEvent.setup();
+    const startViewTransition = vi.fn((updateCallback: () => void) => {
+      updateCallback();
+    });
+    Object.defineProperty(document, 'startViewTransition', {
+      configurable: true,
+      value: startViewTransition
+    });
+    Object.defineProperty(window, 'matchMedia', {
+      configurable: true,
+      value: vi.fn(() => ({ matches: false }))
+    });
+
+    render(<App />);
+
+    await user.click(screen.getByRole('button', { name: '品牌视觉' }));
+
+    expect(startViewTransition).toHaveBeenCalledTimes(1);
+    expect(screen.getAllByRole('button', { name: /打开项目/i })).toHaveLength(
+      works.filter((work) => work.category === 'Brand').length
+    );
+  });
+
   it('opens and closes a lightweight work preview without leaving the page', async () => {
     const user = userEvent.setup();
     render(<App />);
@@ -69,7 +93,7 @@ describe('portfolio app', () => {
     await user.click(screen.getByRole('button', { name: `打开项目 ${firstWork.titleZh}` }));
     const dialog = screen.getByRole('dialog', { name: firstWork.titleZh });
 
-    expect(dialog).toHaveTextContent('2026');
+    expect(dialog).not.toHaveTextContent(/\b20\d{2}\b/);
     expect(dialog).toHaveTextContent(firstWork.descriptionZh);
     expect(within(dialog).getByRole('img', { name: firstWork.titleZh })).toHaveAttribute(
       'src',
@@ -81,10 +105,28 @@ describe('portfolio app', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
+  it('does not render year labels in work cards, previews, or project detail pages', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<App />);
+
+    expect(container).not.toHaveTextContent(/\b20\d{2}\b/);
+    expect(container.querySelector('.work-card-overlay')).toHaveAttribute(
+      'data-meta',
+      '印刷物料'
+    );
+
+    await user.click(screen.getByRole('button', { name: `打开项目 ${firstWork.titleZh}` }));
+    expect(screen.getByRole('dialog', { name: firstWork.titleZh })).not.toHaveTextContent(/\b20\d{2}\b/);
+
+    await user.click(screen.getByRole('button', { name: /查看详情/i }));
+    expect(screen.getByTestId('project-detail-page')).not.toHaveTextContent(/\b20\d{2}\b/);
+  });
+
   it('uses lightweight preview images for the gallery and featured cover', () => {
     render(<App />);
 
-    expect(screen.getByRole('button', { name: `打开精选项目 ${firstWork.titleZh}` }).querySelector('img')).toHaveAttribute(
+    expect(screen.queryByText(`1 / ${works.length}`)).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: `打开作品详情 ${firstWork.titleZh}` }).querySelector('img')).toHaveAttribute(
       'src',
       firstWork.previewImage
     );
@@ -96,6 +138,63 @@ describe('portfolio app', () => {
       'loading',
       'lazy'
     );
+  });
+
+  it('opens the project detail page directly from the hero carousel', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole('button', { name: `打开作品详情 ${firstWork.titleZh}` }));
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(screen.getByTestId('project-detail-page')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: firstWork.titleZh })).toBeInTheDocument();
+  });
+
+  it('cycles every work in the hero carousel', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole('button', { name: '下一个轮播作品' }));
+
+    expect(screen.getByRole('button', { name: `打开作品详情 ${works[1].titleZh}` })).toBeInTheDocument();
+  });
+
+  it('auto-advances the hero carousel', () => {
+    vi.useFakeTimers();
+
+    try {
+      render(<App />);
+
+      act(() => {
+        vi.advanceTimersByTime(7200);
+      });
+
+      expect(screen.getByRole('button', { name: `打开作品详情 ${works[1].titleZh}` })).toBeInTheDocument();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('hides hero arrows after the pointer stops moving for one second', () => {
+    vi.useFakeTimers();
+
+    try {
+      render(<App />);
+      const hero = screen.getByRole('region', { name: '精选作品' });
+
+      fireEvent.mouseMove(hero);
+
+      expect(hero).toHaveClass('is-controls-visible');
+
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+
+      expect(hero).not.toHaveClass('is-controls-visible');
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('keeps project navigation buttons outside the preview dialog', async () => {
