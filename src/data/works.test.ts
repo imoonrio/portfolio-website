@@ -78,9 +78,9 @@ describe('portfolio works data', () => {
     }
   });
 
-  it('uses complete image fitting in the detail dialog', () => {
+  it('fills the detail dialog thumbnail frame', () => {
     const styles = readFileSync(join(process.cwd(), 'src/styles.css'), 'utf-8');
 
-    expect(styles).toMatch(/\.detail-image\s*{[^}]*object-fit:\s*contain/s);
+    expect(styles).toMatch(/\.detail-image\s*{[^}]*object-fit:\s*cover/s);
   });
 });

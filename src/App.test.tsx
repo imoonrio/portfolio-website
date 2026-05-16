@@ -58,10 +58,18 @@ describe('portfolio app', () => {
     const about = screen.getByRole('contentinfo');
     const character = within(about).getByRole('img', { name: /虚拟人物形象/i });
 
-    expect(character).toHaveAttribute('src', '/profile-character-preview.jpg');
+    expect(character).toHaveAttribute('src', '/profile-ip.png');
     expect(container.querySelector('.about-portrait')).toBeInTheDocument();
     expect(container.querySelectorAll('.about-icon')).toHaveLength(6);
     expect(within(about).getByRole('img', { name: /微信二维码占位图/i })).toBeInTheDocument();
+    expect(within(about).getByRole('link', { name: /发邮件 307318003@qq.com/i })).toHaveAttribute(
+      'href',
+      'mailto:307318003@qq.com'
+    );
+    expect(within(about).getByRole('link', { name: /致电 18088680814/i })).toHaveAttribute(
+      'href',
+      'tel:18088680814'
+    );
   });
 
   it('filters works by category and can reset to all works', async () => {
@@ -262,8 +270,33 @@ describe('portfolio app', () => {
     expect(within(detailPage).getByRole('banner')).toHaveClass('full-bleed');
     expect(within(detailPage).getByRole('banner').querySelector('img')).not.toBeInTheDocument();
     expect(within(detailPage).getByRole('heading', { name: firstWork.titleZh })).toBeInTheDocument();
-    expect(within(screen.getByRole('navigation', { name: /主导航/i })).getByText('首页')).toBeInTheDocument();
+    expect(within(detailPage).getByRole('heading', { name: '联系方式' })).toBeInTheDocument();
+    expect(detailPage).toHaveTextContent('307318003@qq.com');
+    expect(within(screen.getByRole('navigation', { name: /主导航/i })).queryByText('首页')).not.toBeInTheDocument();
     expect(projectImages.map((image) => image.getAttribute('src'))).toEqual(firstWork.images);
+  });
+
+  it('shows a back-to-top button for the internally scrolling project detail page', async () => {
+    const user = userEvent.setup();
+    const windowScrollTo = vi.fn();
+    Object.defineProperty(window, 'scrollTo', { configurable: true, value: windowScrollTo });
+    render(<App />);
+
+    await user.click(screen.getByRole('button', { name: `打开项目 ${firstWork.titleZh}` }));
+    await user.click(screen.getByRole('button', { name: /查看详情/i }));
+
+    const detailPage = screen.getByTestId('project-detail-page');
+    const detailScrollTo = vi.fn();
+    Object.defineProperty(detailPage, 'scrollTop', { configurable: true, value: 520 });
+    Object.defineProperty(detailPage, 'scrollTo', { configurable: true, value: detailScrollTo });
+
+    act(() => {
+      detailPage.dispatchEvent(new Event('scroll'));
+    });
+
+    await user.click(await screen.findByRole('button', { name: /返回顶部/i }));
+
+    expect(detailScrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
   });
 
   it('returns from project detail navigation to the requested main-page section', async () => {
@@ -367,7 +400,7 @@ describe('portfolio app', () => {
     expect(screen.getByTestId('floating-header')).toHaveClass('is-visible');
   });
 
-  it('does not show the floating menu while a preview dialog or detail page is active', async () => {
+  it('does not show the floating menu while a preview dialog is active but keeps it available on detail pages', async () => {
     const user = userEvent.setup();
     Object.defineProperty(window, 'scrollY', { configurable: true, value: 220, writable: true });
 
@@ -382,7 +415,7 @@ describe('portfolio app', () => {
     expect(screen.queryByRole('navigation', { name: /滚动固定导航/i })).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: /查看详情/i }));
-    expect(screen.queryByRole('navigation', { name: /滚动固定导航/i })).not.toBeInTheDocument();
+    expect(screen.getByRole('navigation', { name: /滚动固定导航/i })).toBeInTheDocument();
   });
 
   it('blocks common copy, context menu, and image drag actions', () => {

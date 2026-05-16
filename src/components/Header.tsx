@@ -4,9 +4,7 @@ import { copy } from '../i18n';
 import { SiteActions } from './SiteActions';
 
 type HeaderProps = {
-  includeHome?: boolean;
   language: Language;
-  onHome?: () => void;
   onNavigateSection?: (sectionId: 'work' | 'about' | 'contact') => void;
   onRandomSkin: () => void;
   onResetSkin: () => void;
@@ -15,9 +13,7 @@ type HeaderProps = {
 };
 
 export function Header({
-  includeHome = false,
   language,
-  onHome,
   onNavigateSection,
   onRandomSkin,
   onResetSkin,
@@ -41,11 +37,6 @@ export function Header({
         心月呈幅
       </a>
       <nav className="site-nav" aria-label={text.navLabel}>
-        {includeHome ? (
-          <button className="nav-button" type="button" onClick={onHome}>
-            {text.nav.home}
-          </button>
-        ) : null}
         <a href="#work" onClick={handleSectionClick('work')}>{text.nav.work}</a>
         <a href="#about" onClick={handleSectionClick('about')}>{text.nav.about}</a>
         <a href="#contact" onClick={handleSectionClick('contact')}>{text.nav.contact}</a>

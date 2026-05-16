@@ -152,22 +152,22 @@ export default function App() {
       data-skin={skinId}
     >
       <Header
-        includeHome={Boolean(detailWork)}
         language={language}
-        onHome={closeProjectDetail}
         onNavigateSection={detailWork ? navigateToSection : undefined}
         skinName={activeSkinName}
         onRandomSkin={randomizeSkin}
         onResetSkin={resetSkin}
         onToggleLanguage={toggleLanguage}
       />
-      {!detailWork && !selectedWork ? (
+      {!selectedWork ? (
         <FloatingHeader
           language={language}
+          onNavigateSection={detailWork ? navigateToSection : undefined}
           skinName={activeSkinName}
           onRandomSkin={randomizeSkin}
           onResetSkin={resetSkin}
           onToggleLanguage={toggleLanguage}
+          scrollContainerSelector={detailWork ? '.project-detail-page' : undefined}
         />
       ) : null}
       {detailWork ? (
@@ -201,7 +201,10 @@ export default function App() {
         onOpenDetail={openProjectDetail}
         onPreviousWork={showPreviousWork}
       />
-      <BackToTopButton language={language} />
+      <BackToTopButton
+        language={language}
+        scrollContainerSelector={detailWork ? '.project-detail-page' : undefined}
+      />
     </div>
   );
 }

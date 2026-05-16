@@ -72,7 +72,7 @@ function Icon({ name }: { name: IconName }) {
 function ProfilePortrait({ label }: { label: string }) {
   return (
     <figure className="about-portrait">
-      <img src="/profile-character-preview.jpg" alt={label} draggable="false" loading="lazy" decoding="async" />
+      <img src="/profile-ip.png" alt={label} draggable="false" loading="lazy" decoding="async" />
     </figure>
   );
 }
@@ -125,25 +125,51 @@ export function About({ language }: AboutProps) {
             ))}
           </div>
         </section>
-        <section id="contact" className="contact-panel" aria-labelledby="contact-title">
-          <h3 id="contact-title">
-            <Icon name="contact" />
-            {text.about.contactTitle}
-          </h3>
-          <div className="contact-grid">
-            <div className="qr-placeholder" aria-label={text.about.qrPlaceholder} role="img">
-              <span>{text.about.qrPlaceholder}</span>
-            </div>
-            <address>
-              <a href="mailto:307318003@qq.com">307318003@qq.com</a>
-              <a href="tel:18088680814">18088680814</a>
-              <a href="https://imoon.bbroot.com/" target="_blank" rel="noreferrer">
-                {text.about.profile}
-              </a>
-            </address>
-          </div>
-        </section>
+        <ContactPanel language={language} id="contact" />
       </div>
     </footer>
+  );
+}
+
+type ContactPanelProps = {
+  id?: string;
+  language: Language;
+};
+
+export function ContactPanel({ id, language }: ContactPanelProps) {
+  const text = copy[language];
+  const titleId = id ? `${id}-title` : 'contact-title';
+  const actions = {
+    email: language === 'zh' ? '发邮件 307318003@qq.com' : 'Email 307318003@qq.com',
+    phone: language === 'zh' ? '致电 18088680814' : 'Call 18088680814',
+    site: language === 'zh' ? `访问${text.about.profile}` : `Visit ${text.about.profile}`
+  };
+
+  return (
+    <section id={id} className="contact-panel" aria-labelledby={titleId}>
+      <h3 id={titleId}>
+        <Icon name="contact" />
+        {text.about.contactTitle}
+      </h3>
+      <div className="contact-grid">
+        <div className="qr-placeholder" aria-label={text.about.qrPlaceholder} role="img">
+          <span>{text.about.qrPlaceholder}</span>
+        </div>
+        <address>
+          <a className="contact-link" href="mailto:307318003@qq.com" aria-label={actions.email}>
+            <strong>307318003@qq.com</strong>
+            <span className="contact-arrow" aria-hidden="true">→</span>
+          </a>
+          <a className="contact-link" href="tel:18088680814" aria-label={actions.phone}>
+            <strong>18088680814</strong>
+            <span className="contact-arrow" aria-hidden="true">→</span>
+          </a>
+          <a className="contact-link" href="https://imoon.bbroot.com/" target="_blank" rel="noreferrer" aria-label={actions.site}>
+            <strong>{text.about.profile}</strong>
+            <span className="contact-arrow" aria-hidden="true">→</span>
+          </a>
+        </address>
+      </div>
+    </section>
   );
 }

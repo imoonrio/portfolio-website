@@ -1,5 +1,6 @@
 import type { Work } from '../data/works';
 import { categoryLabels, copy, type Language } from '../i18n';
+import { ContactPanel } from './About';
 
 type WorkProjectPageProps = {
   language: Language;
@@ -34,6 +35,7 @@ export function WorkProjectPage({ language, work, onBack }: WorkProjectPageProps
             </article>
           ))}
         </section>
+        <ContactPanel language={language} />
       </div>
     </main>
   );
