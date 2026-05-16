@@ -1,15 +1,13 @@
 import type { Work } from '../data/works';
-import { categoryLabels, copy, type Language } from '../i18n';
+import { categoryLabels, type Language } from '../i18n';
 import { ContactPanel } from './About';
 
 type WorkProjectPageProps = {
   language: Language;
   work: Work;
-  onBack: () => void;
 };
 
-export function WorkProjectPage({ language, work, onBack }: WorkProjectPageProps) {
-  const text = copy[language];
+export function WorkProjectPage({ language, work }: WorkProjectPageProps) {
   const title = language === 'zh' ? work.titleZh : work.title;
   const description = language === 'zh' ? work.descriptionZh : work.description;
 
@@ -25,9 +23,6 @@ export function WorkProjectPage({ language, work, onBack }: WorkProjectPageProps
         </div>
       </header>
       <div className="project-detail-frame">
-        <button className="project-back-button" type="button" onClick={onBack}>
-          {text.detail.backToWorks}
-        </button>
         <section className="project-image-stack snap-scroll" aria-label={title}>
           {work.images.map((image, index) => (
             <article className="project-image-panel" key={image}>

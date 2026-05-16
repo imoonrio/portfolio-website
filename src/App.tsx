@@ -92,11 +92,6 @@ export default function App() {
     scrollToTop();
   };
 
-  const closeProjectDetail = () => {
-    setDetailWork(null);
-    scrollToTop();
-  };
-
   const navigateToSection = (sectionId: SectionTarget) => {
     setSelectedWork(null);
     setDetailWork(null);
@@ -159,19 +154,17 @@ export default function App() {
         onResetSkin={resetSkin}
         onToggleLanguage={toggleLanguage}
       />
-      {!selectedWork ? (
+      {!selectedWork && !detailWork ? (
         <FloatingHeader
           language={language}
-          onNavigateSection={detailWork ? navigateToSection : undefined}
           skinName={activeSkinName}
           onRandomSkin={randomizeSkin}
           onResetSkin={resetSkin}
           onToggleLanguage={toggleLanguage}
-          scrollContainerSelector={detailWork ? '.project-detail-page' : undefined}
         />
       ) : null}
       {detailWork ? (
-        <WorkProjectPage language={language} work={detailWork} onBack={closeProjectDetail} />
+        <WorkProjectPage language={language} work={detailWork} />
       ) : (
         <>
           <main>

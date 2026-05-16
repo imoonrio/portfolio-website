@@ -139,9 +139,12 @@ type ContactPanelProps = {
 export function ContactPanel({ id, language }: ContactPanelProps) {
   const text = copy[language];
   const titleId = id ? `${id}-title` : 'contact-title';
+  const email = 'imoonrio@foxmail.com';
+  const phone = '18088680814';
+  const maskedPhone = '180 **** 0814';
   const actions = {
-    email: language === 'zh' ? '发邮件 307318003@qq.com' : 'Email 307318003@qq.com',
-    phone: language === 'zh' ? '致电 18088680814' : 'Call 18088680814',
+    email: language === 'zh' ? `发邮件 ${email}` : `Email ${email}`,
+    phone: language === 'zh' ? `致电 ${maskedPhone}` : `Call ${maskedPhone}`,
     site: language === 'zh' ? `访问${text.about.profile}` : `Visit ${text.about.profile}`
   };
 
@@ -156,17 +159,17 @@ export function ContactPanel({ id, language }: ContactPanelProps) {
           <span>{text.about.qrPlaceholder}</span>
         </div>
         <address>
-          <a className="contact-link" href="mailto:307318003@qq.com" aria-label={actions.email}>
-            <strong>307318003@qq.com</strong>
-            <span className="contact-arrow" aria-hidden="true">→</span>
+          <a className="contact-link" href={`mailto:${email}`} aria-label={actions.email}>
+            <strong>{email}</strong>
+            <span className="contact-arrow" aria-hidden="true" />
           </a>
-          <a className="contact-link" href="tel:18088680814" aria-label={actions.phone}>
-            <strong>18088680814</strong>
-            <span className="contact-arrow" aria-hidden="true">→</span>
+          <a className="contact-link" href={`tel:${phone}`} aria-label={actions.phone}>
+            <strong>{maskedPhone}</strong>
+            <span className="contact-arrow" aria-hidden="true" />
           </a>
           <a className="contact-link" href="https://imoon.bbroot.com/" target="_blank" rel="noreferrer" aria-label={actions.site}>
             <strong>{text.about.profile}</strong>
-            <span className="contact-arrow" aria-hidden="true">→</span>
+            <span className="contact-arrow" aria-hidden="true" />
           </a>
         </address>
       </div>

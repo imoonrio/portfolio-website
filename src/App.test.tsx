@@ -18,8 +18,8 @@ describe('portfolio app', () => {
     expect(screen.getByRole('navigation', { name: /主导航/i })).toBeInTheDocument();
     expect(within(screen.getByRole('navigation', { name: /主导航/i })).queryByText('首页')).not.toBeInTheDocument();
     expect(screen.getByRole('region', { name: /作品画廊/i })).toBeInTheDocument();
-    expect(screen.getByRole('contentinfo')).toHaveTextContent('307318003@qq.com');
-    expect(screen.getByRole('contentinfo')).toHaveTextContent('18088680814');
+    expect(screen.getByRole('contentinfo')).toHaveTextContent('imoonrio@foxmail.com');
+    expect(screen.getByRole('contentinfo')).toHaveTextContent('180 **** 0814');
   });
 
   it('switches to a random skin and can restore the default skin', async () => {
@@ -62,14 +62,16 @@ describe('portfolio app', () => {
     expect(container.querySelector('.about-portrait')).toBeInTheDocument();
     expect(container.querySelectorAll('.about-icon')).toHaveLength(6);
     expect(within(about).getByRole('img', { name: /微信二维码占位图/i })).toBeInTheDocument();
-    expect(within(about).getByRole('link', { name: /发邮件 307318003@qq.com/i })).toHaveAttribute(
+    expect(within(about).getByRole('link', { name: /发邮件 imoonrio@foxmail.com/i })).toHaveAttribute(
       'href',
-      'mailto:307318003@qq.com'
+      'mailto:imoonrio@foxmail.com'
     );
-    expect(within(about).getByRole('link', { name: /致电 18088680814/i })).toHaveAttribute(
+    expect(within(about).getByRole('link', { name: /致电 180 \*\*\*\* 0814/i })).toHaveAttribute(
       'href',
       'tel:18088680814'
     );
+    expect(about).toHaveTextContent('180 **** 0814');
+    expect(about).not.toHaveTextContent('18088680814');
   });
 
   it('filters works by category and can reset to all works', async () => {
@@ -271,7 +273,9 @@ describe('portfolio app', () => {
     expect(within(detailPage).getByRole('banner').querySelector('img')).not.toBeInTheDocument();
     expect(within(detailPage).getByRole('heading', { name: firstWork.titleZh })).toBeInTheDocument();
     expect(within(detailPage).getByRole('heading', { name: '联系方式' })).toBeInTheDocument();
-    expect(detailPage).toHaveTextContent('307318003@qq.com');
+    expect(detailPage).toHaveTextContent('imoonrio@foxmail.com');
+    expect(detailPage).toHaveTextContent('180 **** 0814');
+    expect(detailPage).not.toHaveTextContent('18088680814');
     expect(within(screen.getByRole('navigation', { name: /主导航/i })).queryByText('首页')).not.toBeInTheDocument();
     expect(projectImages.map((image) => image.getAttribute('src'))).toEqual(firstWork.images);
   });
@@ -400,7 +404,7 @@ describe('portfolio app', () => {
     expect(screen.getByTestId('floating-header')).toHaveClass('is-visible');
   });
 
-  it('does not show the floating menu while a preview dialog is active but keeps it available on detail pages', async () => {
+  it('does not show the floating menu while a preview dialog or detail page is active', async () => {
     const user = userEvent.setup();
     Object.defineProperty(window, 'scrollY', { configurable: true, value: 220, writable: true });
 
@@ -415,7 +419,8 @@ describe('portfolio app', () => {
     expect(screen.queryByRole('navigation', { name: /滚动固定导航/i })).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: /查看详情/i }));
-    expect(screen.getByRole('navigation', { name: /滚动固定导航/i })).toBeInTheDocument();
+    expect(screen.queryByRole('navigation', { name: /滚动固定导航/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /返回作品列表/i })).not.toBeInTheDocument();
   });
 
   it('blocks common copy, context menu, and image drag actions', () => {

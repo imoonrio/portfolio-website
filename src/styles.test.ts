@@ -90,9 +90,11 @@ describe('mobile responsive stylesheet', () => {
     expect(styles).toMatch(/\.about-summary-item \.about-icon,\s*\.about-detail h3 \.about-icon\s*{[^}]*color:\s*var\(--skin-accent\);[^}]*background:\s*color-mix\(in srgb, var\(--skin-accent\) 14%, var\(--skin-surface-strong\)\);[^}]*border-color:\s*color-mix\(in srgb, var\(--skin-accent\) 46%, var\(--skin-border\)\);/s);
     expect(styles).toMatch(/\.about-copy\s*{[^}]*scroll-margin-top:\s*120px;/s);
     expect(styles).toMatch(/\.contact-panel\s*{[^}]*scroll-margin-top:\s*120px;/s);
-    expect(styles).toMatch(/\.brand\s*{[^}]*color:\s*var\(--brand-color\);[^}]*background:\s*transparent;[^}]*border:\s*0;[^}]*text-shadow:\s*var\(--brand-text-shadow\);[^}]*transform:\s*var\(--brand-transform\);/s);
+    expect(styles).toMatch(/\.brand\s*{[^}]*color:\s*var\(--brand-color\);[^}]*background:\s*transparent;[^}]*border:\s*0;[^}]*text-shadow:\s*none;[^}]*transform:\s*var\(--brand-transform\);/s);
+    expect(styles).toMatch(/\.contact-panel address\s*{[^}]*display:\s*grid;[^}]*gap:\s*12px;[^}]*font-style:\s*normal;/s);
     expect(styles).toMatch(/\.contact-link\s*{[^}]*display:\s*grid;[^}]*grid-template-columns:\s*minmax\(0, 1fr\) 38px;/s);
-    expect(styles).toMatch(/\.contact-arrow\s*{[^}]*display:\s*grid;[^}]*background:\s*var\(--skin-accent\);/s);
+    expect(styles).toMatch(/\.contact-arrow\s*{[^}]*display:\s*grid;[^}]*width:\s*18px;[^}]*height:\s*18px;[^}]*color:\s*var\(--contact-arrow-color\);[^}]*background:\s*transparent;[^}]*border:\s*0;[^}]*box-shadow:\s*none;/s);
+    expect(styles).toMatch(/\.contact-arrow::before\s*{[^}]*border-top:\s*3px solid currentColor;[^}]*border-right:\s*3px solid currentColor;[^}]*transform:\s*translateX\(-1px\) rotate\(45deg\);/s);
     expect(styles).toMatch(/\.about-subtitle\s*{[^}]*color:\s*var\(--skin-muted\);/s);
     expect(styles).toMatch(/\.about-detail li\s*{[^}]*color:\s*var\(--skin-muted\);/s);
     expect(phoneRules).toMatch(/\.hero-copy\s*{[^}]*color:\s*#fffdfa;/s);
@@ -119,7 +121,7 @@ describe('mobile responsive stylesheet', () => {
   it('turns project detail pages into natural mobile scrolling instead of viewport snap panels', () => {
     expect(phoneRules).toMatch(/\.project-detail-page\s*{[^}]*height:\s*auto;[^}]*overflow-y:\s*visible;/s);
     expect(phoneRules).toMatch(/\.project-detail-page\.detail-scroll,\s*\.project-image-stack\s*{[^}]*scroll-snap-type:\s*none;/s);
-    expect(phoneRules).toMatch(/\.project-back-button\s*{[^}]*top:\s*104px;[^}]*width:\s*max-content;[^}]*background:\s*color-mix\(in srgb, var\(--skin-surface-strong\) 88%, transparent\);/s);
+    expect(styles).not.toMatch(/\.floating-project-back-button/);
     expect(phoneRules).toMatch(/\.project-detail-hero\s*{[^}]*min-height:\s*min\(310px, 36vh\);/s);
     expect(phoneRules).toMatch(/\.project-detail-hero-copy\s*{[^}]*width:\s*min\(calc\(100% - var\(--content-gutter-mobile\)\), var\(--content-max-width\)\);[^}]*margin:\s*0 auto 28px;/s);
     expect(phoneRules).toMatch(/\.project-image-panel\s*{[^}]*min-height:\s*auto;[^}]*scroll-snap-align:\s*none;/s);
