@@ -82,7 +82,7 @@ export function About({ language }: AboutProps) {
   const summaryIcons: IconName[] = ['compass', 'layers', 'spark'];
 
   return (
-    <footer id="contact" className="about-section">
+    <footer className="about-section">
       <div id="about" className="about-copy">
         <ProfilePortrait label={text.about.portraitAria} />
         <p className="eyebrow">{text.about.eyebrow}</p>
@@ -125,17 +125,23 @@ export function About({ language }: AboutProps) {
             ))}
           </div>
         </section>
-        <section className="contact-panel" aria-labelledby="contact-title">
+        <section id="contact" className="contact-panel" aria-labelledby="contact-title">
           <h3 id="contact-title">
             <Icon name="contact" />
             {text.about.contactTitle}
           </h3>
-          <address>
-            <a href="mailto:hello@example.com">hello@example.com</a>
-            <a href="https://example.com" target="_blank" rel="noreferrer">
-              {text.about.profile}
-            </a>
-          </address>
+          <div className="contact-grid">
+            <div className="qr-placeholder" aria-label={text.about.qrPlaceholder} role="img">
+              <span>{text.about.qrPlaceholder}</span>
+            </div>
+            <address>
+              <a href="mailto:307318003@qq.com">307318003@qq.com</a>
+              <a href="tel:18088680814">18088680814</a>
+              <a href="https://imoon.bbroot.com/" target="_blank" rel="noreferrer">
+                {text.about.profile}
+              </a>
+            </address>
+          </div>
         </section>
       </div>
     </footer>

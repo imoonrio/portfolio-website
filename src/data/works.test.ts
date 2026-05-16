@@ -1,4 +1,4 @@
-import { featuredWork, getCategories, works } from './works';
+import { featuredWork, getCategories, heroSlides, works } from './works';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -23,6 +23,18 @@ describe('portfolio works data', () => {
   it('exposes one featured work for the editorial hero', () => {
     expect(featuredWork).toBeDefined();
     expect(featuredWork.featured).toBe(true);
+  });
+
+  it('uses four dedicated local slide images for the homepage hero carousel', () => {
+    expect(heroSlides).toHaveLength(4);
+
+    for (const slide of heroSlides) {
+      expect(works.some((work) => work.id === slide.workId)).toBe(true);
+      expect(slide.image).toMatch(/^\/works\/slides\/.+-slide\.png$/);
+
+      const slidePath = join(process.cwd(), 'public', slide.image.replace(/^\//, ''));
+      expect(existsSync(slidePath), `${slide.image} should exist`).toBe(true);
+    }
   });
 
   it('returns sorted unique categories with All first', () => {

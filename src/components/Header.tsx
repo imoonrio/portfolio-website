@@ -1,15 +1,39 @@
+import type { MouseEvent } from 'react';
 import type { Language } from '../i18n';
 import { copy } from '../i18n';
+import { SiteActions } from './SiteActions';
 
 type HeaderProps = {
   includeHome?: boolean;
   language: Language;
   onHome?: () => void;
+  onNavigateSection?: (sectionId: 'work' | 'about' | 'contact') => void;
+  onRandomSkin: () => void;
+  onResetSkin: () => void;
   onToggleLanguage: () => void;
+  skinName: string;
 };
 
-export function Header({ includeHome = false, language, onHome, onToggleLanguage }: HeaderProps) {
+export function Header({
+  includeHome = false,
+  language,
+  onHome,
+  onNavigateSection,
+  onRandomSkin,
+  onResetSkin,
+  onToggleLanguage,
+  skinName
+}: HeaderProps) {
   const text = copy[language];
+  const handleSectionClick =
+    (sectionId: 'work' | 'about' | 'contact') => (event: MouseEvent<HTMLAnchorElement>) => {
+      if (!onNavigateSection) {
+        return;
+      }
+
+      event.preventDefault();
+      onNavigateSection(sectionId);
+    };
 
   return (
     <header className="site-header">
@@ -22,13 +46,17 @@ export function Header({ includeHome = false, language, onHome, onToggleLanguage
             {text.nav.home}
           </button>
         ) : null}
-        <a href="#work">{text.nav.work}</a>
-        <a href="#about">{text.nav.about}</a>
-        <a href="#contact">{text.nav.contact}</a>
+        <a href="#work" onClick={handleSectionClick('work')}>{text.nav.work}</a>
+        <a href="#about" onClick={handleSectionClick('about')}>{text.nav.about}</a>
+        <a href="#contact" onClick={handleSectionClick('contact')}>{text.nav.contact}</a>
       </nav>
-      <button className="language-toggle" type="button" onClick={onToggleLanguage}>
-        {text.languageToggle}
-      </button>
+      <SiteActions
+        language={language}
+        skinName={skinName}
+        onRandomSkin={onRandomSkin}
+        onResetSkin={onResetSkin}
+        onToggleLanguage={onToggleLanguage}
+      />
     </header>
   );
 }

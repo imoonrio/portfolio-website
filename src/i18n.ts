@@ -23,7 +23,7 @@ export const categoryLabels: Record<Language, Record<WorkCategory | 'All', strin
 
 export const copy = {
   en: {
-    languageToggle: '中文',
+    languageToggle: '中',
     navLabel: 'Primary navigation',
     floatingNavLabel: 'Fixed scroll navigation',
     brandAria: '心月呈幅 home',
@@ -67,7 +67,7 @@ export const copy = {
       intro:
         'A multidisciplinary visual designer with an art and design background, focused on automotive and mobility-related brand communication. The work spans campaign key visuals, social content systems, event materials, digital interfaces, and responsive website experiences.',
       portraitAria: 'Virtual profile character',
-      profile: 'Studio profile',
+      profile: '心月呈幅的小站',
       summary: [
         { label: 'Focus', value: 'Brand communication / Digital interface / Event visual system' },
         { label: 'Role', value: 'Design direction, visual execution, cross-functional collaboration' },
@@ -99,7 +99,8 @@ export const copy = {
             'Designed official website pages, mobile interfaces, app and e-commerce screens, and responsive layouts with attention to information architecture and usability.'
         }
       ],
-      contactTitle: 'Contact'
+      contactTitle: 'Contact',
+      qrPlaceholder: 'WeChat QR placeholder'
     },
     backToTop: 'Back to top'
   },
@@ -148,7 +149,7 @@ export const copy = {
       intro:
         '具备美术与设计专业背景，长期服务于汽车及出行相关品牌的商业视觉项目。工作内容覆盖品牌主视觉、社交媒体长图文、节日热点海报、线下活动物料、数字界面、响应式网站与 VI 规范等方向。',
       portraitAria: '虚拟人物形象',
-      profile: '工作室主页',
+      profile: '心月呈幅的小站',
       summary: [
         { label: '核心方向', value: '品牌传播 / 数字界面 / 活动视觉系统' },
         { label: '角色能力', value: '设计统筹、视觉执行、跨团队协作' },
@@ -180,7 +181,8 @@ export const copy = {
             '参与官网、移动端页面、App、电商平台及响应式页面设计，关注信息架构、页面布局、视觉一致性与上线落地。'
         }
       ],
-      contactTitle: '联系方式'
+      contactTitle: '联系方式',
+      qrPlaceholder: '微信二维码占位图'
     },
     backToTop: '返回顶部'
   }

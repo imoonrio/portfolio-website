@@ -8,13 +8,16 @@ import { Hero } from './components/Hero';
 import { WorkDetail } from './components/WorkDetail';
 import { WorkGallery } from './components/WorkGallery';
 import { WorkProjectPage } from './components/WorkProjectPage';
-import { getCategories, works, type Work } from './data/works';
+import { getCategories, heroSlides, works, type Work } from './data/works';
 import type { Language } from './i18n';
+import { defaultSkinId, getRandomSkinId, skins } from './skins';
 import './styles.css';
 
 type ViewTransitionDocument = Document & {
   startViewTransition?: (updateCallback: () => void) => void;
 };
+
+type SectionTarget = 'work' | 'about' | 'contact';
 
 function scrollToTop() {
   if (navigator.userAgent.includes('jsdom')) {
@@ -30,13 +33,19 @@ function scrollToTop() {
 
 export default function App() {
   const [language, setLanguage] = useState<Language>('zh');
+  const [skinId, setSkinId] = useState(defaultSkinId);
   const [activeCategory, setActiveCategory] = useState('All');
   const [selectedWork, setSelectedWork] = useState<Work | null>(null);
   const [detailWork, setDetailWork] = useState<Work | null>(null);
+  const [pendingScrollTarget, setPendingScrollTarget] = useState<SectionTarget | null>(null);
   const categories = useMemo(() => getCategories(), []);
   const selectedWorkIndex = selectedWork
     ? works.findIndex((work) => work.id === selectedWork.id)
     : -1;
+  const activeSkinName = skins.find((skin) => skin.id === skinId)?.name ?? 'Botanical';
+  const toggleLanguage = () => setLanguage((current) => (current === 'en' ? 'zh' : 'en'));
+  const randomizeSkin = () => setSkinId((current) => getRandomSkinId(current));
+  const resetSkin = () => setSkinId(defaultSkinId);
 
   const showPreviousWork = () => {
     if (selectedWorkIndex < 0) {
@@ -88,6 +97,12 @@ export default function App() {
     scrollToTop();
   };
 
+  const navigateToSection = (sectionId: SectionTarget) => {
+    setSelectedWork(null);
+    setDetailWork(null);
+    setPendingScrollTarget(sectionId);
+  };
+
   const showNextWork = () => {
     if (selectedWorkIndex < 0) {
       return;
@@ -116,18 +131,43 @@ export default function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if (detailWork || !pendingScrollTarget || navigator.userAgent.includes('jsdom')) {
+      return;
+    }
+
+    const frame = window.requestAnimationFrame(() => {
+      document.getElementById(pendingScrollTarget)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setPendingScrollTarget(null);
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [detailWork, pendingScrollTarget]);
+
   return (
-    <div id="top" className="site-shell" lang={language === 'zh' ? 'zh-CN' : 'en'}>
+    <div
+      id="top"
+      className="site-shell"
+      lang={language === 'zh' ? 'zh-CN' : 'en'}
+      data-skin={skinId}
+    >
       <Header
         includeHome={Boolean(detailWork)}
         language={language}
         onHome={closeProjectDetail}
-        onToggleLanguage={() => setLanguage((current) => (current === 'en' ? 'zh' : 'en'))}
+        onNavigateSection={detailWork ? navigateToSection : undefined}
+        skinName={activeSkinName}
+        onRandomSkin={randomizeSkin}
+        onResetSkin={resetSkin}
+        onToggleLanguage={toggleLanguage}
       />
       {!detailWork && !selectedWork ? (
         <FloatingHeader
           language={language}
-          onToggleLanguage={() => setLanguage((current) => (current === 'en' ? 'zh' : 'en'))}
+          skinName={activeSkinName}
+          onRandomSkin={randomizeSkin}
+          onResetSkin={resetSkin}
+          onToggleLanguage={toggleLanguage}
         />
       ) : null}
       {detailWork ? (
@@ -135,7 +175,12 @@ export default function App() {
       ) : (
         <>
           <main>
-            <Hero language={language} works={works} onOpenWork={openWorkDetail} />
+            <Hero
+              language={language}
+              slides={heroSlides}
+              works={works}
+              onOpenWork={openWorkDetail}
+            />
             <WorkGallery
               activeCategory={activeCategory}
               categories={categories}

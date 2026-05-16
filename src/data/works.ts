@@ -16,6 +16,11 @@ export type Work = {
   link?: string;
 };
 
+export type HeroSlide = {
+  image: string;
+  workId: Work['id'];
+};
+
 function optimizedAsset(folder: string, file: string) {
   return `/works/optimized/${folder}/${file}`;
 }
@@ -133,6 +138,25 @@ export const works: Work[] = [
     image: optimizedAsset('fairy-tale-picture-book', 'fairy_tale_book_thumb_1_1.png'),
     previewImage: optimizedAsset('fairy-tale-picture-book', 'fairy_tale_book_thumb_2_3.png'),
     images: optimizedImages('fairy-tale-picture-book', 'fairy_tale_book', 7)
+  }
+];
+
+export const heroSlides: HeroSlide[] = [
+  {
+    workId: 'skincare-packaging',
+    image: '/works/slides/skincare_packaging-slide.png'
+  },
+  {
+    workId: 'skincare-brochure',
+    image: '/works/slides/skincare-slide.png'
+  },
+  {
+    workId: 'jiefang-experience-officer-identity',
+    image: '/works/slides/jiefang_identity-slide.png'
+  },
+  {
+    workId: 'jiefangxing-app-visual-system',
+    image: '/works/slides/jiefang_app-slide.png'
   }
 ];
 

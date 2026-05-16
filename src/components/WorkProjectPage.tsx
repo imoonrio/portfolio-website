@@ -15,7 +15,6 @@ export function WorkProjectPage({ language, work, onBack }: WorkProjectPageProps
   return (
     <main className="project-detail-page detail-scroll" data-testid="project-detail-page">
       <header className="project-detail-hero full-bleed" role="banner">
-        <img src={work.images[0]} alt={title} draggable="false" fetchPriority="high" />
         <div className="project-detail-hero-copy">
           <p className="eyebrow">
             {categoryLabels[language][work.category]}

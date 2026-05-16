@@ -1,13 +1,23 @@
 import { useEffect, useState } from 'react';
 import type { Language } from '../i18n';
 import { copy } from '../i18n';
+import { SiteActions } from './SiteActions';
 
 type FloatingHeaderProps = {
   language: Language;
+  onRandomSkin: () => void;
+  onResetSkin: () => void;
   onToggleLanguage: () => void;
+  skinName: string;
 };
 
-export function FloatingHeader({ language, onToggleLanguage }: FloatingHeaderProps) {
+export function FloatingHeader({
+  language,
+  onRandomSkin,
+  onResetSkin,
+  onToggleLanguage,
+  skinName
+}: FloatingHeaderProps) {
   const [isVisible, setIsVisible] = useState(false);
   const text = copy[language];
 
@@ -38,9 +48,13 @@ export function FloatingHeader({ language, onToggleLanguage }: FloatingHeaderPro
         <a href="#about">{text.nav.about}</a>
         <a href="#contact">{text.nav.contact}</a>
       </nav>
-      <button className="language-toggle" type="button" onClick={onToggleLanguage}>
-        {text.languageToggle}
-      </button>
+      <SiteActions
+        language={language}
+        skinName={skinName}
+        onRandomSkin={onRandomSkin}
+        onResetSkin={onResetSkin}
+        onToggleLanguage={onToggleLanguage}
+      />
     </header>
   );
 }

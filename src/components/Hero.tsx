@@ -1,29 +1,32 @@
 import { useEffect, useState } from 'react';
-import type { Work } from '../data/works';
+import type { HeroSlide, Work } from '../data/works';
 import { copy, type Language } from '../i18n';
 
 type HeroProps = {
+  slides: HeroSlide[];
   language: Language;
   works: Work[];
   onOpenWork: (work: Work) => void;
 };
 
-export function Hero({ language, works, onOpenWork }: HeroProps) {
+export function Hero({ language, slides, works, onOpenWork }: HeroProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [showControls, setShowControls] = useState(false);
   const text = copy[language];
-  const activeWork = works[activeIndex] ?? works[0];
+  const activeSlide = slides[activeIndex] ?? slides[0];
+  const activeWork = works.find((work) => work.id === activeSlide?.workId) ?? works[0];
   const title = language === 'zh' ? activeWork.titleZh : activeWork.title;
+  const slideImage = activeSlide?.image ?? activeWork.previewImage;
   const openAria = language === 'zh' ? '打开作品详情' : 'Open project detail';
   const previousAria = language === 'zh' ? '上一个轮播作品' : 'Previous carousel work';
   const nextAria = language === 'zh' ? '下一个轮播作品' : 'Next carousel work';
 
   const showPrevious = () => {
-    setActiveIndex((current) => (current === 0 ? works.length - 1 : current - 1));
+    setActiveIndex((current) => (current === 0 ? slides.length - 1 : current - 1));
   };
 
   const showNext = () => {
-    setActiveIndex((current) => (current + 1) % works.length);
+    setActiveIndex((current) => (current + 1) % slides.length);
   };
 
   const revealControls = () => {
@@ -36,7 +39,7 @@ export function Hero({ language, works, onOpenWork }: HeroProps) {
     return () => {
       window.clearInterval(timer);
     };
-  }, [works.length]);
+  }, [slides.length]);
 
   useEffect(() => {
     if (!showControls) {
@@ -70,7 +73,7 @@ export function Hero({ language, works, onOpenWork }: HeroProps) {
         onClick={() => onOpenWork(activeWork)}
         aria-label={`${openAria} ${title}`}
       >
-        <img src={activeWork.previewImage} alt="" draggable="false" fetchPriority="high" />
+        <img src={slideImage} alt="" draggable="false" fetchPriority="high" />
       </button>
       <div className="hero-carousel-controls" aria-label={text.hero.carouselAria}>
         <button

@@ -1,21 +1,41 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
-import { works } from './data/works';
+import { heroSlides, works } from './data/works';
+import { defaultSkinId } from './skins';
 
 const firstWork = works[0];
+const secondHeroWork = works.find((work) => work.id === heroSlides[1].workId) ?? works[1];
 
 describe('portfolio app', () => {
   it('renders the editorial portfolio structure', () => {
-    render(<App />);
+    const { container } = render(<App />);
 
+    expect(container.querySelector('.site-shell')).toHaveAttribute('data-skin', defaultSkinId);
     expect(screen.getByRole('banner')).toHaveTextContent('心月呈幅');
     expect(screen.getByRole('heading', { name: '精选作品' })).toBeInTheDocument();
     expect(screen.getByText('以安静而笃定的方式呈现。')).toBeInTheDocument();
     expect(screen.getByRole('navigation', { name: /主导航/i })).toBeInTheDocument();
     expect(within(screen.getByRole('navigation', { name: /主导航/i })).queryByText('首页')).not.toBeInTheDocument();
     expect(screen.getByRole('region', { name: /作品画廊/i })).toBeInTheDocument();
-    expect(screen.getByRole('contentinfo')).toHaveTextContent('hello@example.com');
+    expect(screen.getByRole('contentinfo')).toHaveTextContent('307318003@qq.com');
+    expect(screen.getByRole('contentinfo')).toHaveTextContent('18088680814');
+  });
+
+  it('switches to a random skin and can restore the default skin', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<App />);
+    const shell = container.querySelector('.site-shell');
+
+    expect(shell).toHaveAttribute('data-skin', defaultSkinId);
+
+    await user.click(screen.getByRole('button', { name: /随机切换皮肤/i }));
+
+    expect(shell).not.toHaveAttribute('data-skin', defaultSkinId);
+
+    await user.click(screen.getByRole('button', { name: '恢复默认皮肤' }));
+
+    expect(shell).toHaveAttribute('data-skin', defaultSkinId);
   });
 
   it('presents an anonymized professional profile from the resume', () => {
@@ -28,7 +48,6 @@ describe('portfolio app', () => {
     expect(about).toHaveTextContent('数字界面');
     expect(about).toHaveTextContent('项目经历');
     expect(about).not.toHaveTextContent('金鑫');
-    expect(about).not.toHaveTextContent('18088680814');
     expect(about).not.toHaveTextContent('长春');
     expect(about).not.toHaveTextContent('2018');
     expect(about).not.toHaveTextContent('北京百孚思');
@@ -42,6 +61,7 @@ describe('portfolio app', () => {
     expect(character).toHaveAttribute('src', '/profile-character-preview.jpg');
     expect(container.querySelector('.about-portrait')).toBeInTheDocument();
     expect(container.querySelectorAll('.about-icon')).toHaveLength(6);
+    expect(within(about).getByRole('img', { name: /微信二维码占位图/i })).toBeInTheDocument();
   });
 
   it('filters works by category and can reset to all works', async () => {
@@ -128,7 +148,7 @@ describe('portfolio app', () => {
     expect(screen.queryByText(`1 / ${works.length}`)).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: `打开作品详情 ${firstWork.titleZh}` }).querySelector('img')).toHaveAttribute(
       'src',
-      firstWork.previewImage
+      heroSlides[0].image
     );
     expect(screen.getByRole('button', { name: `打开项目 ${firstWork.titleZh}` }).querySelector('img')).toHaveAttribute(
       'src',
@@ -157,7 +177,7 @@ describe('portfolio app', () => {
 
     await user.click(screen.getByRole('button', { name: '下一个轮播作品' }));
 
-    expect(screen.getByRole('button', { name: `打开作品详情 ${works[1].titleZh}` })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: `打开作品详情 ${secondHeroWork.titleZh}` })).toBeInTheDocument();
   });
 
   it('auto-advances the hero carousel', () => {
@@ -170,7 +190,7 @@ describe('portfolio app', () => {
         vi.advanceTimersByTime(7200);
       });
 
-      expect(screen.getByRole('button', { name: `打开作品详情 ${works[1].titleZh}` })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: `打开作品详情 ${secondHeroWork.titleZh}` })).toBeInTheDocument();
     } finally {
       vi.useRealTimers();
     }
@@ -240,9 +260,30 @@ describe('portfolio app', () => {
     expect(detailPage.querySelector('.project-detail-frame')).toBeInTheDocument();
     expect(within(detailPage).getByRole('banner')).toHaveClass('project-detail-hero');
     expect(within(detailPage).getByRole('banner')).toHaveClass('full-bleed');
+    expect(within(detailPage).getByRole('banner').querySelector('img')).not.toBeInTheDocument();
     expect(within(detailPage).getByRole('heading', { name: firstWork.titleZh })).toBeInTheDocument();
     expect(within(screen.getByRole('navigation', { name: /主导航/i })).getByText('首页')).toBeInTheDocument();
     expect(projectImages.map((image) => image.getAttribute('src'))).toEqual(firstWork.images);
+  });
+
+  it('returns from project detail navigation to the requested main-page section', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole('button', { name: `打开项目 ${firstWork.titleZh}` }));
+    await user.click(screen.getByRole('button', { name: /查看详情/i }));
+
+    await user.click(within(screen.getByRole('navigation', { name: /主导航/i })).getByText('联系'));
+
+    expect(screen.queryByTestId('project-detail-page')).not.toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '联系方式' })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: `打开项目 ${firstWork.titleZh}` }));
+    await user.click(screen.getByRole('button', { name: /查看详情/i }));
+    await user.click(within(screen.getByRole('navigation', { name: /主导航/i })).getByText('关于'));
+
+    expect(screen.queryByTestId('project-detail-page')).not.toBeInTheDocument();
+    expect(screen.getByRole('img', { name: /虚拟人物形象/i })).toBeInTheDocument();
   });
 
   it('uses full-image snap panels inside the project detail page', async () => {
@@ -281,9 +322,9 @@ describe('portfolio app', () => {
     expect(screen.getByRole('heading', { name: /Selected works/i })).toBeInTheDocument();
     expect(screen.getByRole('navigation', { name: /Primary/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Digital' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '中文' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '中' })).toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: '中文' }));
+    await user.click(screen.getByRole('button', { name: '中' }));
 
     expect(screen.getByRole('heading', { name: /精选作品/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '数字体验' })).toBeInTheDocument();
