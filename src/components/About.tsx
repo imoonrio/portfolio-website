@@ -155,20 +155,20 @@ export function ContactPanel({ id, language }: ContactPanelProps) {
         {text.about.contactTitle}
       </h3>
       <div className="contact-grid">
-        <div className="qr-placeholder" aria-label={text.about.qrPlaceholder} role="img">
-          <span>{text.about.qrPlaceholder}</span>
+        <div className="qr-placeholder">
+          <img src="/wechat.svg" alt={text.about.qrPlaceholder} draggable="false" loading="lazy" decoding="async" />
         </div>
         <address>
           <a className="contact-link" href={`mailto:${email}`} aria-label={actions.email}>
-            <strong>{email}</strong>
+            <span className="contact-link-value">{email}</span>
             <span className="contact-arrow" aria-hidden="true" />
           </a>
           <a className="contact-link" href={`tel:${phone}`} aria-label={actions.phone}>
-            <strong>{maskedPhone}</strong>
+            <span className="contact-link-value">{maskedPhone}</span>
             <span className="contact-arrow" aria-hidden="true" />
           </a>
           <a className="contact-link" href="https://imoon.bbroot.com/" target="_blank" rel="noreferrer" aria-label={actions.site}>
-            <strong>{text.about.profile}</strong>
+            <span className="contact-link-value">{text.about.profile}</span>
             <span className="contact-arrow" aria-hidden="true" />
           </a>
         </address>

@@ -154,9 +154,10 @@ export default function App() {
         onResetSkin={resetSkin}
         onToggleLanguage={toggleLanguage}
       />
-      {!selectedWork && !detailWork ? (
+      {!selectedWork ? (
         <FloatingHeader
           language={language}
+          onNavigateSection={detailWork ? navigateToSection : undefined}
           skinName={activeSkinName}
           onRandomSkin={randomizeSkin}
           onResetSkin={resetSkin}
@@ -194,10 +195,7 @@ export default function App() {
         onOpenDetail={openProjectDetail}
         onPreviousWork={showPreviousWork}
       />
-      <BackToTopButton
-        language={language}
-        scrollContainerSelector={detailWork ? '.project-detail-page' : undefined}
-      />
+      <BackToTopButton language={language} />
     </div>
   );
 }

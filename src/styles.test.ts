@@ -62,21 +62,22 @@ describe('mobile responsive stylesheet', () => {
     expect(styles).toMatch(/::view-transition-new\(work-gallery\)\s*{[^}]*animation:\s*work-gallery-in 460ms cubic-bezier\(0\.22, 1, 0\.36, 1\) both;/s);
   });
 
-  it('uses softer desktop project page snapping so the first image can scroll back to the hero', () => {
+  it('lets project detail pages use page scrolling so the shared header can scroll away', () => {
     expect(styles).toMatch(/\.detail-image\s*{[^}]*object-fit:\s*cover;/s);
+    expect(styles).toMatch(/\.project-detail-page\s*{[^}]*height:\s*auto;[^}]*overflow-y:\s*visible;/s);
     expect(styles).toMatch(/\.project-detail-page\s*{[^}]*scrollbar-gutter:\s*stable;/s);
-    expect(styles).toMatch(/\.project-detail-page\.detail-scroll\s*{[^}]*scroll-snap-type:\s*y proximity;/s);
+    expect(styles).toMatch(/\.project-detail-page\.detail-scroll\s*{[^}]*scroll-snap-type:\s*none;/s);
     expect(styles).toMatch(/\.project-detail-hero\s*{[^}]*scroll-snap-align:\s*start;/s);
     expect(styles).toMatch(/\.project-detail-hero\s*{[^}]*display:\s*grid;[^}]*align-items:\s*end;[^}]*background:[^}]*linear-gradient/s);
     expect(styles).toMatch(/\.project-detail-hero-copy\s*{[^}]*width:\s*min\(var\(--content-max-width\), calc\(100% - var\(--content-gutter\)\)\);[^}]*margin:\s*0 auto clamp\(28px, 7vw, 88px\);/s);
     expect(styles).not.toMatch(/\.project-detail-hero img\s*{/);
-    expect(styles).toMatch(/\.project-image-stack\s*{[^}]*scroll-snap-type:\s*y proximity;/s);
+    expect(styles).toMatch(/\.project-image-stack\s*{[^}]*scroll-snap-type:\s*none;/s);
     expect(styles).toMatch(/\.project-image-panel\s*{[^}]*scroll-snap-stop:\s*normal;/s);
   });
 
   it('keeps the project detail contact panel on the same constrained content grid', () => {
     expect(styles).toMatch(/\.project-detail-frame\s*{[^}]*width:\s*min\(var\(--content-max-width\), calc\(100% - var\(--content-gutter\)\)\);[^}]*margin:\s*24px auto 72px;/s);
-    expect(styles).toMatch(/\.project-detail-frame > \.contact-panel\s*{[^}]*width:\s*100%;[^}]*padding:\s*clamp\(24px, 4vw, 40px\);[^}]*background:\s*var\(--skin-surface\);[^}]*border:\s*1px solid var\(--skin-border\);[^}]*box-shadow:\s*var\(--skin-shadow\);/s);
+    expect(styles).toMatch(/\.project-detail-frame > \.contact-panel\s*{[^}]*width:\s*100%;[^}]*padding-block:\s*clamp\(24px, 4vw, 40px\);[^}]*padding-inline:\s*max\(clamp\(24px, 4vw, 40px\), calc\(\(100% - 760px\) \/ 2\)\);[^}]*background:\s*var\(--skin-surface\);[^}]*border:\s*1px solid var\(--skin-border\);[^}]*box-shadow:\s*var\(--skin-shadow\);/s);
   });
 
   it('drives about icons and mobile text colors from the active skin variables', () => {
@@ -91,8 +92,13 @@ describe('mobile responsive stylesheet', () => {
     expect(styles).toMatch(/\.about-copy\s*{[^}]*scroll-margin-top:\s*120px;/s);
     expect(styles).toMatch(/\.contact-panel\s*{[^}]*scroll-margin-top:\s*120px;/s);
     expect(styles).toMatch(/\.brand\s*{[^}]*color:\s*var\(--brand-color\);[^}]*background:\s*transparent;[^}]*border:\s*0;[^}]*text-shadow:\s*none;[^}]*transform:\s*var\(--brand-transform\);/s);
-    expect(styles).toMatch(/\.contact-panel address\s*{[^}]*display:\s*grid;[^}]*gap:\s*12px;[^}]*font-style:\s*normal;/s);
+    expect(styles).toMatch(/\.contact-grid\s*{[^}]*grid-template-columns:\s*minmax\(160px, 228px\) minmax\(0, 420px\);[^}]*gap:\s*clamp\(12px, 2vw, 18px\);[^}]*justify-content:\s*center;[^}]*align-items:\s*stretch;/s);
+    expect(styles).toMatch(/\.contact-panel address\s*{[^}]*display:\s*grid;[^}]*grid-template-rows:\s*repeat\(3, minmax\(0, 1fr\)\);[^}]*gap:\s*12px;[^}]*align-self:\s*stretch;[^}]*font-style:\s*normal;/s);
+    expect(styles).toMatch(/\.qr-placeholder\s*{[^}]*width:\s*min\(100%, 228px\);[^}]*aspect-ratio:\s*1;[^}]*border-radius:\s*var\(--skin-radius\);/s);
+    expect(styles).toMatch(/\.qr-placeholder\s*{[^}]*background:\s*color-mix\(in srgb, var\(--skin-accent\) 8%, var\(--skin-surface-strong\)\);[^}]*border:\s*1px dashed color-mix\(in srgb, var\(--skin-accent\) 48%, var\(--skin-border\)\);[^}]*box-shadow:\s*inset 0 0 0 1px color-mix\(in srgb, var\(--skin-surface-strong\) 72%, transparent\);/s);
+    expect(styles).toMatch(/\.qr-placeholder img\s*{[^}]*width:\s*min\(100%, 176px\);[^}]*background:\s*#fff;[^}]*border:\s*1px solid color-mix\(in srgb, var\(--skin-accent\) 18%, transparent\);/s);
     expect(styles).toMatch(/\.contact-link\s*{[^}]*display:\s*grid;[^}]*grid-template-columns:\s*minmax\(0, 1fr\) 38px;/s);
+    expect(styles).toMatch(/\.contact-link-value\s*{[^}]*font-weight:\s*400;[^}]*overflow:\s*hidden;[^}]*text-overflow:\s*ellipsis;[^}]*white-space:\s*nowrap;/s);
     expect(styles).toMatch(/\.contact-arrow\s*{[^}]*display:\s*grid;[^}]*width:\s*18px;[^}]*height:\s*18px;[^}]*color:\s*var\(--contact-arrow-color\);[^}]*background:\s*transparent;[^}]*border:\s*0;[^}]*box-shadow:\s*none;/s);
     expect(styles).toMatch(/\.contact-arrow::before\s*{[^}]*border-top:\s*3px solid currentColor;[^}]*border-right:\s*3px solid currentColor;[^}]*transform:\s*translateX\(-1px\) rotate\(45deg\);/s);
     expect(styles).toMatch(/\.about-subtitle\s*{[^}]*color:\s*var\(--skin-muted\);/s);
@@ -134,7 +140,8 @@ describe('mobile responsive stylesheet', () => {
     expect(phoneRules).toMatch(/\.contact-panel\s*{[^}]*scroll-margin-top:\s*138px;/s);
     expect(phoneRules).toMatch(/\.about-copy \.eyebrow,\s*\.about-section h2,\s*\.about-subtitle,\s*\.about-intro\s*{[^}]*margin:\s*0;/s);
     expect(phoneRules).toMatch(/\.about-section h2\s*{[^}]*font-size:\s*clamp\(30px, 9vw, 38px\);[^}]*line-height:\s*1\.12;[^}]*overflow-wrap:\s*anywhere;/s);
-    expect(phoneRules).toMatch(/\.contact-grid\s*{[^}]*grid-template-columns:\s*minmax\(0, 1fr\);[^}]*gap:\s*14px;/s);
+    expect(phoneRules).toMatch(/\.contact-grid\s*{[^}]*grid-template-columns:\s*minmax\(0, 1fr\);[^}]*gap:\s*14px;[^}]*justify-content:\s*stretch;/s);
+    expect(phoneRules).toMatch(/\.contact-panel address\s*{[^}]*grid-template-rows:\s*none;/s);
     expect(phoneRules).toMatch(/\.contact-link\s*{[^}]*min-height:\s*56px;[^}]*padding:\s*13px 14px;/s);
   });
 });
