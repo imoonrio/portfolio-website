@@ -73,7 +73,12 @@ export function Hero({ language, slides, works, onOpenWork }: HeroProps) {
         onClick={() => onOpenWork(activeWork)}
         aria-label={`${openAria} ${title}`}
       >
-        <img src={slideImage} alt="" draggable="false" fetchPriority="high" />
+        <img
+          src={slideImage}
+          alt=""
+          draggable="false"
+          fetchPriority="high"
+        />
       </button>
       <div className="hero-carousel-controls" aria-label={text.hero.carouselAria}>
         <button

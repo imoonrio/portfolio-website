@@ -21,16 +21,50 @@ export type HeroSlide = {
   workId: Work['id'];
 };
 
-function optimizedAsset(folder: string, file: string) {
-  return `/works/optimized/${folder}/${file}`;
+export type ResponsiveImageSource = {
+  src: string;
+  width: number;
+};
+
+function responsiveAsset(folder: string, file: string, width = 1200) {
+  const extensionIndex = file.lastIndexOf('.');
+  const baseFile = extensionIndex === -1 ? file : file.slice(0, extensionIndex);
+
+  return `/works/responsive/optimized/${folder}/${baseFile}-${width}.webp`;
 }
 
-function optimizedImages(folder: string, prefix: string, count: number, start = 1) {
+function responsiveImages(folder: string, prefix: string, count: number, start = 1) {
   return Array.from({ length: count }, (_, index) => {
     const imageIndex = String(start + index).padStart(2, '0');
 
-    return optimizedAsset(folder, `${prefix}_${imageIndex}.png`);
+    return responsiveAsset(folder, `${prefix}_${imageIndex}.png`);
   });
+}
+
+const responsiveWidths = [480, 800, 1200];
+
+export function responsiveSources(image: string): ResponsiveImageSource[] {
+  const extensionIndex = image.lastIndexOf('.');
+
+  if (extensionIndex === -1) {
+    return [];
+  }
+
+  const basePath = image.slice(0, extensionIndex);
+  const responsiveBasePath = basePath.startsWith('/works/responsive/')
+    ? basePath.replace(/-\d+$/, '')
+    : basePath.replace(/^\/works\//, '/works/responsive/');
+
+  return responsiveWidths.map((width) => ({
+    src: `${responsiveBasePath}-${width}.webp`,
+    width
+  }));
+}
+
+export function responsiveSrcSet(image: string) {
+  return responsiveSources(image)
+    .map((source) => `${source.src} ${source.width}w`)
+    .join(', ');
 }
 
 export const works: Work[] = [
@@ -43,9 +77,9 @@ export const works: Work[] = [
     description:
       'A skincare packaging and extension system covering product presentation, visual rhythm, and refined material-led communication.',
     descriptionZh: '围绕护肤产品包装与延展视觉建立的系列方案，强调产品呈现、版式节奏与精致的材质表达。',
-    image: optimizedAsset('skincare-packaging', 'skincare_packaging_thumb_1_1.jpg'),
-    previewImage: optimizedAsset('skincare-packaging', 'skincare_packaging_thumb_2_3.jpg'),
-    images: optimizedImages('skincare-packaging', 'skincare_packaging', 7),
+    image: responsiveAsset('skincare-packaging', 'skincare_packaging_thumb_1_1.jpg', 800),
+    previewImage: responsiveAsset('skincare-packaging', 'skincare_packaging_thumb_2_3.jpg', 800),
+    images: responsiveImages('skincare-packaging', 'skincare_packaging', 7),
     featured: true
   },
   {
@@ -57,9 +91,9 @@ export const works: Work[] = [
     description:
       'A brochure design project for skincare communication, balancing product information, editorial pacing, and clean visual hierarchy.',
     descriptionZh: '面向护肤品传播的画册设计项目，在产品信息、阅读节奏与清爽视觉层级之间建立平衡。',
-    image: optimizedAsset('skincare-brochure', 'skincare_brochure_thumb_1_1.png'),
-    previewImage: optimizedAsset('skincare-brochure', 'skincare_brochure_thumb_2_3.png'),
-    images: optimizedImages('skincare-brochure', 'skincare_brochure', 6)
+    image: responsiveAsset('skincare-brochure', 'skincare_brochure_thumb_1_1.png', 800),
+    previewImage: responsiveAsset('skincare-brochure', 'skincare_brochure_thumb_2_3.png', 800),
+    images: responsiveImages('skincare-brochure', 'skincare_brochure', 6)
   },
   {
     id: 'winter-solar-term-posters',
@@ -70,9 +104,9 @@ export const works: Work[] = [
     description:
       'A seasonal poster series built with composite imagery, atmospheric storytelling, and consistent brand-led visual cues.',
     descriptionZh: '冬季节气主题的创意合成海报系列，以场景化叙事、氛围塑造和统一品牌视觉线索组织画面。',
-    image: optimizedAsset('winter-solar-term-posters', 'winter_posters_thumb_1_1.png'),
-    previewImage: optimizedAsset('winter-solar-term-posters', 'winter_posters_thumb_2_3.png'),
-    images: optimizedImages('winter-solar-term-posters', 'winter_posters', 10)
+    image: responsiveAsset('winter-solar-term-posters', 'winter_posters_thumb_1_1.png', 800),
+    previewImage: responsiveAsset('winter-solar-term-posters', 'winter_posters_thumb_2_3.png', 800),
+    images: responsiveImages('winter-solar-term-posters', 'winter_posters', 10)
   },
   {
     id: 'jiefang-experience-officer-identity',
@@ -83,9 +117,9 @@ export const works: Work[] = [
     description:
       'A logo and identity system for a brand-facing experience role, extending from symbol logic to practical visual applications.',
     descriptionZh: '围绕体验官角色建立的 Logo 与品牌视觉识别系统，从标志逻辑延展到多场景应用表达。',
-    image: optimizedAsset('jiefang-experience-officer-identity', 'jiefang_identity_thumb_1_1.png'),
-    previewImage: optimizedAsset('jiefang-experience-officer-identity', 'jiefang_identity_thumb_2_3.png'),
-    images: optimizedImages('jiefang-experience-officer-identity', 'jiefang_identity', 6)
+    image: responsiveAsset('jiefang-experience-officer-identity', 'jiefang_identity_thumb_1_1.png', 800),
+    previewImage: responsiveAsset('jiefang-experience-officer-identity', 'jiefang_identity_thumb_2_3.png', 800),
+    images: responsiveImages('jiefang-experience-officer-identity', 'jiefang_identity', 6)
   },
   {
     id: 'jiefangxing-app-visual-system',
@@ -96,9 +130,9 @@ export const works: Work[] = [
     description:
       'A mobile interface visual system with screen layouts, operational content, and a consistent digital brand expression.',
     descriptionZh: '围绕移动端界面建立的视觉识别系统，覆盖页面布局、运营内容与统一的数字品牌表达。',
-    image: optimizedAsset('jiefangxing-app-visual-system', 'jiefang_app_thumb_1_1.png'),
-    previewImage: optimizedAsset('jiefangxing-app-visual-system', 'jiefang_app_thumb_2_3.png'),
-    images: optimizedImages('jiefangxing-app-visual-system', 'jiefang_app', 10, 7)
+    image: responsiveAsset('jiefangxing-app-visual-system', 'jiefang_app_thumb_1_1.png', 800),
+    previewImage: responsiveAsset('jiefangxing-app-visual-system', 'jiefang_app_thumb_2_3.png', 800),
+    images: responsiveImages('jiefangxing-app-visual-system', 'jiefang_app', 10, 7)
   },
   {
     id: 'jiefang-night-event-visual',
@@ -109,9 +143,9 @@ export const works: Work[] = [
     description:
       'An offline event visual system for stage atmosphere, campaign identity, and supporting materials across the event journey.',
     descriptionZh: '面向线下活动场景的视觉系统，覆盖舞台氛围、活动识别与现场传播物料延展。',
-    image: optimizedAsset('jiefang-night-event-visual', 'jiefang_night_thumb_1_1.png'),
-    previewImage: optimizedAsset('jiefang-night-event-visual', 'jiefang_night_thumb_2_3.png'),
-    images: optimizedImages('jiefang-night-event-visual', 'jiefang_night', 10)
+    image: responsiveAsset('jiefang-night-event-visual', 'jiefang_night_thumb_1_1.png', 800),
+    previewImage: responsiveAsset('jiefang-night-event-visual', 'jiefang_night_thumb_2_3.png', 800),
+    images: responsiveImages('jiefang-night-event-visual', 'jiefang_night', 10)
   },
   {
     id: 'hand-drawn-aroma-standee',
@@ -122,9 +156,9 @@ export const works: Work[] = [
     description:
       'A hand-drawn aroma standee concept combining soft illustration, product mood, and approachable display communication.',
     descriptionZh: '以手绘插画语言呈现香薰主题展架，将产品气质、陈列传播与亲和视觉表达结合。',
-    image: optimizedAsset('hand-drawn-aroma-standee', 'aroma_standee_thumb_1_1.png'),
-    previewImage: optimizedAsset('hand-drawn-aroma-standee', 'aroma_standee_thumb_2_3.png'),
-    images: optimizedImages('hand-drawn-aroma-standee', 'aroma_standee', 8)
+    image: responsiveAsset('hand-drawn-aroma-standee', 'aroma_standee_thumb_1_1.png', 800),
+    previewImage: responsiveAsset('hand-drawn-aroma-standee', 'aroma_standee_thumb_2_3.png', 800),
+    images: responsiveImages('hand-drawn-aroma-standee', 'aroma_standee', 8)
   },
   {
     id: 'fairy-tale-picture-book',
@@ -135,9 +169,9 @@ export const works: Work[] = [
     description:
       'A children’s picture book adaptation exploring narrative pacing, character-led scenes, and warm illustration-based storytelling.',
     descriptionZh: '童话故事创意改编绘本设计，围绕叙事节奏、角色场景和温暖插画表达展开。',
-    image: optimizedAsset('fairy-tale-picture-book', 'fairy_tale_book_thumb_1_1.png'),
-    previewImage: optimizedAsset('fairy-tale-picture-book', 'fairy_tale_book_thumb_2_3.png'),
-    images: optimizedImages('fairy-tale-picture-book', 'fairy_tale_book', 7)
+    image: responsiveAsset('fairy-tale-picture-book', 'fairy_tale_book_thumb_1_1.png', 800),
+    previewImage: responsiveAsset('fairy-tale-picture-book', 'fairy_tale_book_thumb_2_3.png', 800),
+    images: responsiveImages('fairy-tale-picture-book', 'fairy_tale_book', 7)
   }
 ];
 
@@ -153,10 +187,6 @@ export const heroSlides: HeroSlide[] = [
   {
     workId: 'jiefang-experience-officer-identity',
     image: '/works/slides/jiefang_identity-slide.png'
-  },
-  {
-    workId: 'jiefangxing-app-visual-system',
-    image: '/works/slides/jiefang_app-slide.png'
   }
 ];
 

@@ -8,6 +8,10 @@ const firstWork = works[0];
 const secondHeroWork = works.find((work) => work.id === heroSlides[1].workId) ?? works[1];
 
 describe('portfolio app', () => {
+  beforeEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it('renders the editorial portfolio structure', () => {
     const { container } = render(<App />);
 
@@ -63,17 +67,133 @@ describe('portfolio app', () => {
     expect(container.querySelectorAll('.about-icon')).toHaveLength(6);
     expect(within(about).getByRole('img', { name: /微信二维码占位图/i })).toBeInTheDocument();
     expect(within(about).getByRole('img', { name: /微信二维码/i })).toHaveAttribute('src', '/wechat.svg');
-    expect(within(about).getByRole('link', { name: /发邮件 imoonrio@foxmail.com/i })).toHaveAttribute(
-      'href',
-      'mailto:imoonrio@foxmail.com'
-    );
+    expect(within(about).getByRole('button', { name: /复制邮箱 imoonrio@foxmail.com/i })).toBeInTheDocument();
+    expect(within(about).getByRole('button', { name: /复制电话 180 \*\*\*\* 0814/i })).toBeInTheDocument();
+    expect(about).toHaveTextContent('180 **** 0814');
+    expect(about).not.toHaveTextContent('18088680814');
+  });
+
+  it('copies desktop homepage email and phone values to the clipboard with feedback', async () => {
+    const user = userEvent.setup();
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText }
+    });
+
+    render(<App />);
+    const about = screen.getByRole('contentinfo');
+
+    await user.click(within(about).getByRole('button', { name: /复制邮箱 imoonrio@foxmail.com/i }));
+    expect(writeText).toHaveBeenLastCalledWith('imoonrio@foxmail.com');
+    expect(await screen.findByRole('status')).toHaveTextContent('已复制到剪贴板');
+
+    await user.click(within(about).getByRole('button', { name: /复制电话 180 \*\*\*\* 0814/i }));
+    expect(writeText).toHaveBeenLastCalledWith('18088680814');
+  });
+
+  it('hides copy feedback two seconds after copying a contact value', async () => {
+    vi.useFakeTimers();
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText }
+    });
+
+    try {
+      render(<App />);
+
+      await act(async () => {
+        fireEvent.click(screen.getByRole('button', { name: /复制邮箱 imoonrio@foxmail.com/i }));
+        await Promise.resolve();
+      });
+
+      expect(screen.getByRole('status')).toHaveTextContent('已复制到剪贴板');
+
+      act(() => {
+        vi.advanceTimersByTime(2000);
+      });
+
+      expect(screen.getByRole('status')).toHaveTextContent('');
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('copies desktop detail page contact values to the clipboard with feedback', async () => {
+    const user = userEvent.setup();
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText }
+    });
+
+    render(<App />);
+
+    await user.click(screen.getByRole('button', { name: `打开项目 ${firstWork.titleZh}` }));
+    await user.click(screen.getByRole('button', { name: /查看详情/i }));
+
+    const detailPage = screen.getByTestId('project-detail-page');
+    await user.click(within(detailPage).getByRole('button', { name: /复制邮箱 imoonrio@foxmail.com/i }));
+    expect(writeText).toHaveBeenLastCalledWith('imoonrio@foxmail.com');
+
+    await user.click(within(detailPage).getByRole('button', { name: /复制电话 180 \*\*\*\* 0814/i }));
+    expect(writeText).toHaveBeenLastCalledWith('18088680814');
+    expect(await screen.findByRole('status')).toHaveTextContent('已复制到剪贴板');
+  });
+
+  it('copies mobile email while leaving the mobile phone as a call link', async () => {
+    const user = userEvent.setup();
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText }
+    });
+    Object.defineProperty(window, 'matchMedia', {
+      configurable: true,
+      value: vi.fn(() => ({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() }))
+    });
+
+    render(<App />);
+    const about = screen.getByRole('contentinfo');
+
+    await user.click(within(about).getByRole('button', { name: /复制邮箱 imoonrio@foxmail.com/i }));
+    expect(writeText).toHaveBeenLastCalledWith('imoonrio@foxmail.com');
     expect(within(about).getByRole('link', { name: /致电 180 \*\*\*\* 0814/i })).toHaveAttribute(
       'href',
       'tel:18088680814'
     );
-    expect(about).toHaveTextContent('180 **** 0814');
-    expect(about).not.toHaveTextContent('18088680814');
+    expect(within(about).queryByRole('button', { name: /复制电话/i })).not.toBeInTheDocument();
   });
+
+  it('keeps the same mobile contact behavior on project detail pages', async () => {
+    const user = userEvent.setup();
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText }
+    });
+    Object.defineProperty(window, 'matchMedia', {
+      configurable: true,
+      value: vi.fn(() => ({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() }))
+    });
+
+    render(<App />);
+
+    await user.click(screen.getByRole('button', { name: `打开项目 ${firstWork.titleZh}` }));
+    await user.click(screen.getByRole('button', { name: /查看详情/i }));
+
+    const detailPage = screen.getByTestId('project-detail-page');
+    await user.click(within(detailPage).getByRole('button', { name: /复制邮箱 imoonrio@foxmail.com/i }));
+
+    expect(writeText).toHaveBeenLastCalledWith('imoonrio@foxmail.com');
+    expect(within(detailPage).getByRole('link', { name: /致电 180 \*\*\*\* 0814/i })).toHaveAttribute(
+      'href',
+      'tel:18088680814'
+    );
+    expect(within(detailPage).queryByRole('button', { name: /复制电话/i })).not.toBeInTheDocument();
+  });
+
 
   it('filters works by category and can reset to all works', async () => {
     const user = userEvent.setup();
@@ -161,6 +281,9 @@ describe('portfolio app', () => {
       'src',
       heroSlides[0].image
     );
+    expect(screen.getByRole('button', { name: `打开作品详情 ${firstWork.titleZh}` }).querySelector('img')).not.toHaveAttribute(
+      'srcset'
+    );
     expect(screen.getByRole('button', { name: `打开项目 ${firstWork.titleZh}` }).querySelector('img')).toHaveAttribute(
       'src',
       firstWork.previewImage
@@ -168,6 +291,10 @@ describe('portfolio app', () => {
     expect(screen.getByRole('button', { name: `打开项目 ${firstWork.titleZh}` }).querySelector('img')).toHaveAttribute(
       'loading',
       'lazy'
+    );
+    expect(screen.getByRole('button', { name: `打开项目 ${firstWork.titleZh}` }).querySelector('img')).toHaveAttribute(
+      'srcset',
+      expect.stringContaining('.webp')
     );
   });
 
@@ -280,6 +407,7 @@ describe('portfolio app', () => {
     expect(detailPage).not.toHaveTextContent('18088680814');
     expect(within(screen.getByRole('navigation', { name: /主导航/i })).queryByText('首页')).not.toBeInTheDocument();
     expect(projectImages.map((image) => image.getAttribute('src'))).toEqual(firstWork.images);
+    expect(projectImages[0]).toHaveAttribute('srcset', expect.stringContaining('.webp'));
   });
 
   it('shows a back-to-top button for the page-scrolling project detail page', async () => {

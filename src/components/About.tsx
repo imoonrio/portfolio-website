@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { copy, type Language } from '../i18n';
 
 type AboutProps = {
@@ -136,17 +137,65 @@ type ContactPanelProps = {
   language: Language;
 };
 
+function useIsMobileContact() {
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) {
+      return false;
+    }
+
+    return window.matchMedia('(max-width: 680px)').matches;
+  });
+
+  useEffect(() => {
+    if (!window.matchMedia) {
+      return undefined;
+    }
+
+    const query = window.matchMedia('(max-width: 680px)');
+    const updateMatch = () => setIsMobile(query.matches);
+
+    updateMatch();
+    query.addEventListener?.('change', updateMatch);
+
+    return () => {
+      query.removeEventListener?.('change', updateMatch);
+    };
+  }, []);
+
+  return isMobile;
+}
+
 export function ContactPanel({ id, language }: ContactPanelProps) {
   const text = copy[language];
+  const isMobile = useIsMobileContact();
+  const [copyStatus, setCopyStatus] = useState('');
+  const copyStatusTimer = useRef<number | undefined>(undefined);
   const titleId = id ? `${id}-title` : 'contact-title';
   const email = 'imoonrio@foxmail.com';
   const phone = '18088680814';
   const maskedPhone = '180 **** 0814';
+  const copiedMessage = language === 'zh' ? '已复制到剪贴板' : 'Copied to clipboard';
   const actions = {
-    email: language === 'zh' ? `发邮件 ${email}` : `Email ${email}`,
-    phone: language === 'zh' ? `致电 ${maskedPhone}` : `Call ${maskedPhone}`,
+    email: language === 'zh' ? `复制邮箱 ${email}` : `Copy email ${email}`,
+    phone: language === 'zh' ? `复制电话 ${maskedPhone}` : `Copy phone ${maskedPhone}`,
+    callPhone: language === 'zh' ? `致电 ${maskedPhone}` : `Call ${maskedPhone}`,
     site: language === 'zh' ? `访问${text.about.profile}` : `Visit ${text.about.profile}`
   };
+
+  const copyToClipboard = async (value: string) => {
+    await navigator.clipboard?.writeText(value);
+    setCopyStatus(copiedMessage);
+    window.clearTimeout(copyStatusTimer.current);
+    copyStatusTimer.current = window.setTimeout(() => {
+      setCopyStatus('');
+    }, 2000);
+  };
+
+  useEffect(() => {
+    return () => {
+      window.clearTimeout(copyStatusTimer.current);
+    };
+  }, []);
 
   return (
     <section id={id} className="contact-panel" aria-labelledby={titleId}>
@@ -159,19 +208,39 @@ export function ContactPanel({ id, language }: ContactPanelProps) {
           <img src="/wechat.svg" alt={text.about.qrPlaceholder} draggable="false" loading="lazy" decoding="async" />
         </div>
         <address>
-          <a className="contact-link" href={`mailto:${email}`} aria-label={actions.email}>
+          <button
+            className="contact-link"
+            type="button"
+            onClick={() => void copyToClipboard(email)}
+            aria-label={actions.email}
+          >
             <span className="contact-link-value">{email}</span>
             <span className="contact-arrow" aria-hidden="true" />
-          </a>
-          <a className="contact-link" href={`tel:${phone}`} aria-label={actions.phone}>
-            <span className="contact-link-value">{maskedPhone}</span>
-            <span className="contact-arrow" aria-hidden="true" />
-          </a>
+          </button>
+          {isMobile ? (
+            <a className="contact-link" href={`tel:${phone}`} aria-label={actions.callPhone}>
+              <span className="contact-link-value">{maskedPhone}</span>
+              <span className="contact-arrow" aria-hidden="true" />
+            </a>
+          ) : (
+            <button
+              className="contact-link"
+              type="button"
+              onClick={() => void copyToClipboard(phone)}
+              aria-label={actions.phone}
+            >
+              <span className="contact-link-value">{maskedPhone}</span>
+              <span className="contact-arrow" aria-hidden="true" />
+            </button>
+          )}
           <a className="contact-link" href="https://imoon.bbroot.com/" target="_blank" rel="noreferrer" aria-label={actions.site}>
             <span className="contact-link-value">{text.about.profile}</span>
             <span className="contact-arrow" aria-hidden="true" />
           </a>
         </address>
+      </div>
+      <div className="copy-toast" role="status" aria-live="polite">
+        {copyStatus}
       </div>
     </section>
   );

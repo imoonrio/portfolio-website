@@ -1,4 +1,4 @@
-import type { Work } from '../data/works';
+import { responsiveSrcSet, type Work } from '../data/works';
 import { categoryLabels, copy, type Language } from '../i18n';
 
 type WorkDetailProps = {
@@ -52,6 +52,8 @@ export function WorkDetail({
           <img
             className="detail-image"
             src={work.image}
+            srcSet={responsiveSrcSet(work.image)}
+            sizes="(max-width: 720px) 88vw, 420px"
             alt={title}
             draggable="false"
           />

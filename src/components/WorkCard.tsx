@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import type { Work } from '../data/works';
+import { responsiveSrcSet, type Work } from '../data/works';
 import { categoryLabels, copy, type Language } from '../i18n';
 
 type WorkCardProps = {
@@ -31,7 +31,15 @@ export function WorkCard({ animationIndex = 0, work, language, onSelect }: WorkC
       aria-label={`${text.gallery.openProject} ${title}`}
     >
       <span className="work-image-wrap">
-        <img src={work.previewImage} alt="" draggable="false" loading="lazy" decoding="async" />
+        <img
+          src={work.previewImage}
+          srcSet={responsiveSrcSet(work.previewImage)}
+          sizes="(max-width: 720px) 92vw, (max-width: 1100px) 45vw, 360px"
+          alt=""
+          draggable="false"
+          loading="lazy"
+          decoding="async"
+        />
       </span>
       <span
         className="work-card-overlay"

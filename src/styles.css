@@ -1427,6 +1427,7 @@ p {
 }
 
 .contact-link {
+  appearance: none;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 38px;
   gap: 12px;
@@ -1437,7 +1438,10 @@ p {
   background: color-mix(in srgb, var(--skin-surface-strong) 76%, transparent);
   border: 1px solid var(--skin-border);
   border-radius: var(--skin-radius);
+  cursor: pointer;
+  font: inherit;
   line-height: 1.45;
+  text-align: left;
   transition:
     transform 180ms ease,
     color 180ms ease,
@@ -1492,6 +1496,14 @@ p {
 .contact-link:focus-visible .contact-arrow {
   color: var(--contact-arrow-hover-color);
   transform: translateX(2px);
+}
+
+.copy-toast {
+  min-height: 20px;
+  margin-top: 12px;
+  color: var(--skin-accent);
+  font-size: 13px;
+  text-align: center;
 }
 
 @media (max-width: 960px) {

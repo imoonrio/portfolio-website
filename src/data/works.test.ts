@@ -1,4 +1,4 @@
-import { featuredWork, getCategories, heroSlides, works } from './works';
+import { featuredWork, getCategories, heroSlides, responsiveSources, works } from './works';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -13,9 +13,9 @@ describe('portfolio works data', () => {
       expect(work.description.length).toBeGreaterThan(20);
       expect(work.descriptionZh.length).toBeGreaterThan(10);
       expect(work.images.length).toBeGreaterThanOrEqual(1);
-      expect(work.image).toMatch(/^\/works\/optimized\/.+_thumb_1_1\.(jpg|jpeg|png|webp)$/i);
-      expect(work.previewImage).toMatch(/^\/works\/optimized\/.+_thumb_2_3\.(jpg|jpeg|png|webp)$/i);
-      expect(work.images.every((image) => image.includes('/works/optimized/'))).toBe(true);
+      expect(work.image).toMatch(/^\/works\/responsive\/optimized\/.+_thumb_1_1-\d+\.webp$/i);
+      expect(work.previewImage).toMatch(/^\/works\/responsive\/optimized\/.+_thumb_2_3-\d+\.webp$/i);
+      expect(work.images.every((image) => image.includes('/works/responsive/optimized/'))).toBe(true);
       expect(work.images.every((image) => !image.includes('_thumb_'))).toBe(true);
     }
   });
@@ -25,8 +25,8 @@ describe('portfolio works data', () => {
     expect(featuredWork.featured).toBe(true);
   });
 
-  it('uses four dedicated local slide images for the homepage hero carousel', () => {
-    expect(heroSlides).toHaveLength(4);
+  it('uses three dedicated local slide images for the homepage hero carousel', () => {
+    expect(heroSlides).toHaveLength(3);
 
     for (const slide of heroSlides) {
       expect(works.some((work) => work.id === slide.workId)).toBe(true);
@@ -55,6 +55,29 @@ describe('portfolio works data', () => {
     }
   });
 
+  it('provides existing responsive WebP variants for portfolio images', () => {
+    const allImages = works.flatMap((work) => [work.image, work.previewImage, ...work.images]);
+
+    for (const image of allImages) {
+      const sources = responsiveSources(image);
+
+      expect(sources.length).toBeGreaterThanOrEqual(2);
+      expect(sources.every((source) => source.src.endsWith('.webp'))).toBe(true);
+      expect(sources.every((source) => source.width > 0)).toBe(true);
+
+      for (const source of sources) {
+        const assetPath = join(process.cwd(), 'public', source.src.replace(/^\//, ''));
+        expect(existsSync(assetPath), `${source.src} should exist`).toBe(true);
+      }
+    }
+  });
+
+  it('keeps source-only work images out of the public deployment folder', () => {
+    expect(existsSync(join(process.cwd(), 'public/works/new'))).toBe(false);
+    expect(existsSync(join(process.cwd(), 'public/works/optimized'))).toBe(false);
+    expect(existsSync(join(process.cwd(), 'public/works/previews'))).toBe(false);
+  });
+
   it('uses the new portfolio project folders as gallery projects', () => {
     expect(works).toHaveLength(8);
     expect(works.map((work) => work.titleZh)).toEqual([
@@ -68,7 +91,7 @@ describe('portfolio works data', () => {
       '童话故事创意改编儿童绘本设计'
     ]);
     expect(works.every((work) => work.images.length > 1)).toBe(true);
-    expect(works.every((work) => work.image.includes('/works/optimized/'))).toBe(true);
+    expect(works.every((work) => work.image.includes('/works/responsive/optimized/'))).toBe(true);
   });
 
   it('uses 2:3 thumbnails for closed gallery cards and 1:1 thumbnails for dialogs', () => {

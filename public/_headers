@@ -8,5 +8,8 @@
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 
-/works/*
-  Cache-Control: public, max-age=604800
+/works/responsive/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/works/slides/*
+  Cache-Control: public, max-age=31536000, immutable

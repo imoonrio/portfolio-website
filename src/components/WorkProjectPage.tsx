@@ -1,4 +1,4 @@
-import type { Work } from '../data/works';
+import { responsiveSrcSet, type Work } from '../data/works';
 import { categoryLabels, type Language } from '../i18n';
 import { ContactPanel } from './About';
 
@@ -26,7 +26,15 @@ export function WorkProjectPage({ language, work }: WorkProjectPageProps) {
         <section className="project-image-stack snap-scroll" aria-label={title}>
           {work.images.map((image, index) => (
             <article className="project-image-panel" key={image}>
-              <img src={image} alt={`${title} ${index + 1}`} draggable="false" loading="lazy" decoding="async" />
+              <img
+                src={image}
+                srcSet={responsiveSrcSet(image)}
+                sizes="(max-width: 820px) 100vw, 86vw"
+                alt={`${title} ${index + 1}`}
+                draggable="false"
+                loading="lazy"
+                decoding="async"
+              />
             </article>
           ))}
         </section>
