@@ -25,8 +25,26 @@ describe('portfolio works data', () => {
     expect(featuredWork.featured).toBe(true);
   });
 
-  it('uses three dedicated local slide images for the homepage hero carousel', () => {
-    expect(heroSlides).toHaveLength(3);
+  it('uses four dedicated local slide images for the homepage hero carousel in the requested order', () => {
+    expect(heroSlides).toHaveLength(4);
+    expect(heroSlides).toEqual([
+      {
+        workId: 'jiefangxing-app-visual-system',
+        image: '/works/slides/jiefang_app-slide.png'
+      },
+      {
+        workId: 'skincare-brochure',
+        image: '/works/slides/skincare-slide.png'
+      },
+      {
+        workId: 'jiefang-experience-officer-identity',
+        image: '/works/slides/jiefang_identity-slide.png'
+      },
+      {
+        workId: 'skincare-packaging',
+        image: '/works/slides/skincare_packaging-slide.png'
+      }
+    ]);
 
     for (const slide of heroSlides) {
       expect(works.some((work) => work.id === slide.workId)).toBe(true);
@@ -78,15 +96,19 @@ describe('portfolio works data', () => {
     expect(existsSync(join(process.cwd(), 'public/works/previews'))).toBe(false);
   });
 
+  it('ships a static PDF for the portfolio download action', () => {
+    expect(existsSync(join(process.cwd(), 'public/downloads/portfolio.pdf'))).toBe(true);
+  });
+
   it('uses the new portfolio project folders as gallery projects', () => {
     expect(works).toHaveLength(8);
     expect(works.map((work) => work.titleZh)).toEqual([
+      '解放行APP界面视觉识别系统',
+      '解放体验官Logo及品牌视觉识别系统',
+      '解放动力冬季节气创意合成海报设计',
+      '解放之夜线下活动视觉设计',
       '护肤产品包装设计及延展',
       '护肤画册设计',
-      '解放动力冬季节气创意合成海报设计',
-      '解放体验官Logo及品牌视觉识别系统',
-      '解放行APP界面视觉识别系统',
-      '解放之夜线下活动视觉设计',
       '手绘香薰主题展架',
       '童话故事创意改编儿童绘本设计'
     ]);

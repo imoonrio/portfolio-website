@@ -2,10 +2,12 @@ import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 import { heroSlides, works } from './data/works';
+import { categoryLabels } from './i18n';
 import { defaultSkinId } from './skins';
 
 const firstWork = works[0];
 const secondHeroWork = works.find((work) => work.id === heroSlides[1].workId) ?? works[1];
+const nonDigitalWork = works.find((work) => work.category !== 'Digital') ?? works[1];
 
 describe('portfolio app', () => {
   beforeEach(() => {
@@ -50,6 +52,10 @@ describe('portfolio app', () => {
     expect(about).toHaveTextContent('专注品牌传播、数字界面与线下活动视觉系统。');
     expect(about).toHaveTextContent('品牌传播');
     expect(about).toHaveTextContent('数字界面');
+    expect(about).toHaveTextContent('个人能力');
+    expect(about).toHaveTextContent('设计专长');
+    expect(about).not.toHaveTextContent('角色能力');
+    expect(about).not.toHaveTextContent('专业技能');
     expect(about).toHaveTextContent('项目经历');
     expect(about).not.toHaveTextContent('金鑫');
     expect(about).not.toHaveTextContent('长春');
@@ -71,6 +77,30 @@ describe('portfolio app', () => {
     expect(within(about).getByRole('button', { name: /复制电话 180 \*\*\*\* 0814/i })).toBeInTheDocument();
     expect(about).toHaveTextContent('180 **** 0814');
     expect(about).not.toHaveTextContent('18088680814');
+  });
+
+  it('allows mobile long-press save menus on contact QR codes while keeping artwork protected', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    const homeQr = screen.getByRole('img', { name: /微信二维码/i });
+    const artwork = screen.getByRole('button', { name: `打开项目 ${firstWork.titleZh}` }).querySelector('img');
+    const artworkContextMenu = fireEvent.contextMenu(artwork as HTMLImageElement);
+    const homeQrContextMenu = fireEvent.contextMenu(homeQr);
+
+    expect(homeQr).toHaveAttribute('data-saveable-image', 'true');
+    expect(artworkContextMenu).toBe(false);
+    expect(homeQrContextMenu).toBe(true);
+
+    await user.click(screen.getByRole('button', { name: `打开项目 ${firstWork.titleZh}` }));
+    await user.click(screen.getByRole('button', { name: /查看详情/i }));
+
+    const detailQr = within(screen.getByTestId('project-detail-page')).getByRole('img', {
+      name: /微信二维码/i
+    });
+
+    expect(detailQr).toHaveAttribute('data-saveable-image', 'true');
+    expect(fireEvent.contextMenu(detailQr)).toBe(true);
   });
 
   it('copies desktop homepage email and phone values to the clipboard with feedback', async () => {
@@ -207,10 +237,22 @@ describe('portfolio app', () => {
       digitalWorks.length
     );
     expect(within(gallery).getByText(digitalWorks[0].titleZh)).toBeInTheDocument();
-    expect(within(gallery).queryByText(firstWork.titleZh)).not.toBeInTheDocument();
+    expect(within(gallery).queryByText(nonDigitalWork.titleZh)).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: '全部' }));
     expect(within(gallery).getAllByRole('button', { name: /打开项目/i })).toHaveLength(works.length);
+  });
+
+  it('shows a PDF download action at the end of the work filters', () => {
+    render(<App />);
+
+    const gallery = screen.getByRole('region', { name: /作品画廊/i });
+    const filters = within(gallery).getByRole('group', { name: /作品筛选/i });
+    const downloadLink = within(filters).getByRole('link', { name: /下载作品集 PDF/i });
+
+    expect(downloadLink).toHaveAttribute('href', '/downloads/portfolio.pdf');
+    expect(downloadLink).toHaveAttribute('download', 'imoon-portfolio.pdf');
+    expect(filters.lastElementChild).toBe(downloadLink);
   });
 
   it('uses view transitions when switching work filters in supporting browsers', async () => {
@@ -263,7 +305,7 @@ describe('portfolio app', () => {
     expect(container).not.toHaveTextContent(/\b20\d{2}\b/);
     expect(container.querySelector('.work-card-overlay')).toHaveAttribute(
       'data-meta',
-      '印刷物料'
+      categoryLabels.zh[firstWork.category]
     );
 
     await user.click(screen.getByRole('button', { name: `打开项目 ${firstWork.titleZh}` }));
@@ -448,6 +490,30 @@ describe('portfolio app', () => {
 
     expect(screen.queryByTestId('project-detail-page')).not.toBeInTheDocument();
     expect(screen.getByRole('img', { name: /虚拟人物形象/i })).toBeInTheDocument();
+  });
+
+  it('returns home from the header brand and footer site link on project detail pages', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole('button', { name: `打开项目 ${firstWork.titleZh}` }));
+    await user.click(screen.getByRole('button', { name: /查看详情/i }));
+    await user.click(screen.getAllByRole('link', { name: /心月呈幅 首页/i })[0]);
+
+    expect(screen.queryByTestId('project-detail-page')).not.toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /精选作品/i })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: `打开项目 ${firstWork.titleZh}` }));
+    await user.click(screen.getByRole('button', { name: /查看详情/i }));
+    const siteLink = screen.getByRole('link', { name: /访问心月呈幅的小站/i });
+
+    expect(siteLink).toHaveAttribute('href', '#top');
+    expect(siteLink).not.toHaveAttribute('target');
+
+    await user.click(siteLink);
+
+    expect(screen.queryByTestId('project-detail-page')).not.toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /精选作品/i })).toBeInTheDocument();
   });
 
   it('uses full-image snap panels inside the project detail page', async () => {

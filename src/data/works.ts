@@ -69,6 +69,58 @@ export function responsiveSrcSet(image: string) {
 
 export const works: Work[] = [
   {
+    id: 'jiefangxing-app-visual-system',
+    title: 'Jiefangxing App Visual System',
+    titleZh: '解放行APP界面视觉识别系统',
+    category: 'Digital',
+    year: '2026',
+    description:
+      'A mobile interface visual system with screen layouts, operational content, and a consistent digital brand expression.',
+    descriptionZh: '围绕移动端界面建立的视觉识别系统，覆盖页面布局、运营内容与统一的数字品牌表达。',
+    image: responsiveAsset('jiefangxing-app-visual-system', 'jiefang_app_thumb_1_1.png', 800),
+    previewImage: responsiveAsset('jiefangxing-app-visual-system', 'jiefang_app_thumb_2_3.png', 800),
+    images: responsiveImages('jiefangxing-app-visual-system', 'jiefang_app', 10, 7)
+  },
+  {
+    id: 'jiefang-experience-officer-identity',
+    title: 'Experience Officer Logo and Visual Identity',
+    titleZh: '解放体验官Logo及品牌视觉识别系统',
+    category: 'Brand',
+    year: '2026',
+    description:
+      'A logo and identity system for a brand-facing experience role, extending from symbol logic to practical visual applications.',
+    descriptionZh: '围绕体验官角色建立的 Logo 与品牌视觉识别系统，从标志逻辑延展到多场景应用表达。',
+    image: responsiveAsset('jiefang-experience-officer-identity', 'jiefang_identity_thumb_1_1.png', 800),
+    previewImage: responsiveAsset('jiefang-experience-officer-identity', 'jiefang_identity_thumb_2_3.png', 800),
+    images: responsiveImages('jiefang-experience-officer-identity', 'jiefang_identity', 6)
+  },
+  {
+    id: 'winter-solar-term-posters',
+    title: 'Winter Solar Term Composite Posters',
+    titleZh: '解放动力冬季节气创意合成海报设计',
+    category: 'Campaign',
+    year: '2026',
+    description:
+      'A seasonal poster series built with composite imagery, atmospheric storytelling, and consistent brand-led visual cues.',
+    descriptionZh: '冬季节气主题的创意合成海报系列，以场景化叙事、氛围塑造和统一品牌视觉线索组织画面。',
+    image: responsiveAsset('winter-solar-term-posters', 'winter_posters_thumb_1_1.png', 800),
+    previewImage: responsiveAsset('winter-solar-term-posters', 'winter_posters_thumb_2_3.png', 800),
+    images: responsiveImages('winter-solar-term-posters', 'winter_posters', 10)
+  },
+  {
+    id: 'jiefang-night-event-visual',
+    title: 'Jiefang Night Event Visual System',
+    titleZh: '解放之夜线下活动视觉设计',
+    category: 'Event',
+    year: '2026',
+    description:
+      'An offline event visual system for stage atmosphere, campaign identity, and supporting materials across the event journey.',
+    descriptionZh: '面向线下活动场景的视觉系统，覆盖舞台氛围、活动识别与现场传播物料延展。',
+    image: responsiveAsset('jiefang-night-event-visual', 'jiefang_night_thumb_1_1.png', 800),
+    previewImage: responsiveAsset('jiefang-night-event-visual', 'jiefang_night_thumb_2_3.png', 800),
+    images: responsiveImages('jiefang-night-event-visual', 'jiefang_night', 10)
+  },
+  {
     id: 'skincare-packaging',
     title: 'Skincare Packaging System',
     titleZh: '护肤产品包装设计及延展',
@@ -94,58 +146,6 @@ export const works: Work[] = [
     image: responsiveAsset('skincare-brochure', 'skincare_brochure_thumb_1_1.png', 800),
     previewImage: responsiveAsset('skincare-brochure', 'skincare_brochure_thumb_2_3.png', 800),
     images: responsiveImages('skincare-brochure', 'skincare_brochure', 6)
-  },
-  {
-    id: 'winter-solar-term-posters',
-    title: 'Winter Solar Term Composite Posters',
-    titleZh: '解放动力冬季节气创意合成海报设计',
-    category: 'Campaign',
-    year: '2026',
-    description:
-      'A seasonal poster series built with composite imagery, atmospheric storytelling, and consistent brand-led visual cues.',
-    descriptionZh: '冬季节气主题的创意合成海报系列，以场景化叙事、氛围塑造和统一品牌视觉线索组织画面。',
-    image: responsiveAsset('winter-solar-term-posters', 'winter_posters_thumb_1_1.png', 800),
-    previewImage: responsiveAsset('winter-solar-term-posters', 'winter_posters_thumb_2_3.png', 800),
-    images: responsiveImages('winter-solar-term-posters', 'winter_posters', 10)
-  },
-  {
-    id: 'jiefang-experience-officer-identity',
-    title: 'Experience Officer Logo and Visual Identity',
-    titleZh: '解放体验官Logo及品牌视觉识别系统',
-    category: 'Brand',
-    year: '2026',
-    description:
-      'A logo and identity system for a brand-facing experience role, extending from symbol logic to practical visual applications.',
-    descriptionZh: '围绕体验官角色建立的 Logo 与品牌视觉识别系统，从标志逻辑延展到多场景应用表达。',
-    image: responsiveAsset('jiefang-experience-officer-identity', 'jiefang_identity_thumb_1_1.png', 800),
-    previewImage: responsiveAsset('jiefang-experience-officer-identity', 'jiefang_identity_thumb_2_3.png', 800),
-    images: responsiveImages('jiefang-experience-officer-identity', 'jiefang_identity', 6)
-  },
-  {
-    id: 'jiefangxing-app-visual-system',
-    title: 'Jiefangxing App Visual System',
-    titleZh: '解放行APP界面视觉识别系统',
-    category: 'Digital',
-    year: '2026',
-    description:
-      'A mobile interface visual system with screen layouts, operational content, and a consistent digital brand expression.',
-    descriptionZh: '围绕移动端界面建立的视觉识别系统，覆盖页面布局、运营内容与统一的数字品牌表达。',
-    image: responsiveAsset('jiefangxing-app-visual-system', 'jiefang_app_thumb_1_1.png', 800),
-    previewImage: responsiveAsset('jiefangxing-app-visual-system', 'jiefang_app_thumb_2_3.png', 800),
-    images: responsiveImages('jiefangxing-app-visual-system', 'jiefang_app', 10, 7)
-  },
-  {
-    id: 'jiefang-night-event-visual',
-    title: 'Jiefang Night Event Visual System',
-    titleZh: '解放之夜线下活动视觉设计',
-    category: 'Event',
-    year: '2026',
-    description:
-      'An offline event visual system for stage atmosphere, campaign identity, and supporting materials across the event journey.',
-    descriptionZh: '面向线下活动场景的视觉系统，覆盖舞台氛围、活动识别与现场传播物料延展。',
-    image: responsiveAsset('jiefang-night-event-visual', 'jiefang_night_thumb_1_1.png', 800),
-    previewImage: responsiveAsset('jiefang-night-event-visual', 'jiefang_night_thumb_2_3.png', 800),
-    images: responsiveImages('jiefang-night-event-visual', 'jiefang_night', 10)
   },
   {
     id: 'hand-drawn-aroma-standee',
@@ -177,8 +177,8 @@ export const works: Work[] = [
 
 export const heroSlides: HeroSlide[] = [
   {
-    workId: 'skincare-packaging',
-    image: '/works/slides/skincare_packaging-slide.png'
+    workId: 'jiefangxing-app-visual-system',
+    image: '/works/slides/jiefang_app-slide.png'
   },
   {
     workId: 'skincare-brochure',
@@ -187,6 +187,10 @@ export const heroSlides: HeroSlide[] = [
   {
     workId: 'jiefang-experience-officer-identity',
     image: '/works/slides/jiefang_identity-slide.png'
+  },
+  {
+    workId: 'skincare-packaging',
+    image: '/works/slides/skincare_packaging-slide.png'
   }
 ];
 

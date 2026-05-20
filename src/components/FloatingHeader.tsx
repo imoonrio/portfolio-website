@@ -6,6 +6,7 @@ import { SiteActions } from './SiteActions';
 
 type FloatingHeaderProps = {
   language: Language;
+  onNavigateHome?: () => void;
   onNavigateSection?: (sectionId: 'work' | 'about' | 'contact') => void;
   onRandomSkin: () => void;
   onResetSkin: () => void;
@@ -16,6 +17,7 @@ type FloatingHeaderProps = {
 
 export function FloatingHeader({
   language,
+  onNavigateHome,
   onNavigateSection,
   onRandomSkin,
   onResetSkin,
@@ -25,6 +27,14 @@ export function FloatingHeader({
 }: FloatingHeaderProps) {
   const [isVisible, setIsVisible] = useState(false);
   const text = copy[language];
+  const handleHomeClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (!onNavigateHome) {
+      return;
+    }
+
+    event.preventDefault();
+    onNavigateHome();
+  };
   const handleSectionClick =
     (sectionId: 'work' | 'about' | 'contact') => (event: MouseEvent<HTMLAnchorElement>) => {
       if (!onNavigateSection) {
@@ -61,7 +71,7 @@ export function FloatingHeader({
 
   return (
     <header className="floating-header is-visible" data-testid="floating-header">
-      <a className="brand" href="#top" aria-label={text.brandAria}>
+      <a className="brand" href="#top" aria-label={text.brandAria} onClick={handleHomeClick}>
         心月呈幅
       </a>
       <nav className="site-nav" aria-label={text.floatingNavLabel}>

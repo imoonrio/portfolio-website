@@ -41,6 +41,14 @@ describe('mobile responsive stylesheet', () => {
     expect(styles).toMatch(/\.about-section\s*{[^}]*width:\s*min\(var\(--content-max-width\), calc\(100% - var\(--content-gutter\)\)\);/s);
   });
 
+  it('places a skin-aware PDF download action at the end of the filter row', () => {
+    expect(styles).toMatch(/\.portfolio-download-button\s*{[^}]*margin-left:\s*auto;[^}]*width:\s*46px;[^}]*height:\s*46px;[^}]*border-radius:\s*999px;[^}]*background:\s*var\(--skin-accent\);[^}]*color:\s*var\(--skin-accent-contrast\);/s);
+    expect(styles).toMatch(/\.portfolio-download-label\s*{[^}]*display:\s*none;/s);
+    expect(phoneRules).toMatch(/\.portfolio-download-button\s*{[^}]*flex:\s*1 0 100%;[^}]*width:\s*100%;[^}]*border-radius:\s*999px;[^}]*justify-content:\s*center;[^}]*text-align:\s*center;/s);
+    expect(phoneRules).toMatch(/\.portfolio-download-label\s*{[^}]*display:\s*inline;/s);
+    expect(phoneRules).toMatch(/\.portfolio-download-icon\s*{[^}]*display:\s*none;/s);
+  });
+
   it('renders the hero work area as a full-width 16:9 carousel banner', () => {
     expect(styles).toMatch(/\.hero\s*{[^}]*position:\s*relative;[^}]*width:\s*100%;/s);
     expect(styles).toMatch(/\.hero-copy\s*{[^}]*position:\s*absolute;[^}]*z-index:\s*2;/s);
@@ -97,6 +105,7 @@ describe('mobile responsive stylesheet', () => {
     expect(styles).toMatch(/\.qr-placeholder\s*{[^}]*width:\s*min\(100%, 228px\);[^}]*aspect-ratio:\s*1;[^}]*border-radius:\s*var\(--skin-radius\);/s);
     expect(styles).toMatch(/\.qr-placeholder\s*{[^}]*background:\s*color-mix\(in srgb, var\(--skin-accent\) 8%, var\(--skin-surface-strong\)\);[^}]*border:\s*1px dashed color-mix\(in srgb, var\(--skin-accent\) 48%, var\(--skin-border\)\);[^}]*box-shadow:\s*inset 0 0 0 1px color-mix\(in srgb, var\(--skin-surface-strong\) 72%, transparent\);/s);
     expect(styles).toMatch(/\.qr-placeholder img\s*{[^}]*width:\s*min\(100%, 176px\);[^}]*background:\s*#fff;[^}]*border:\s*1px solid color-mix\(in srgb, var\(--skin-accent\) 18%, transparent\);/s);
+    expect(styles).toMatch(/\.content-protected \.qr-placeholder img\s*{[^}]*pointer-events:\s*auto;[^}]*-webkit-touch-callout:\s*default;[^}]*user-select:\s*auto;/s);
     expect(styles).toMatch(/\.contact-link\s*{[^}]*display:\s*grid;[^}]*grid-template-columns:\s*minmax\(0, 1fr\) 38px;/s);
     expect(styles).toMatch(/\.contact-link-value\s*{[^}]*font-weight:\s*400;[^}]*overflow:\s*hidden;[^}]*text-overflow:\s*ellipsis;[^}]*white-space:\s*nowrap;/s);
     expect(styles).toMatch(/\.contact-arrow\s*{[^}]*display:\s*grid;[^}]*width:\s*18px;[^}]*height:\s*18px;[^}]*color:\s*var\(--contact-arrow-color\);[^}]*background:\s*transparent;[^}]*border:\s*0;[^}]*box-shadow:\s*none;/s);

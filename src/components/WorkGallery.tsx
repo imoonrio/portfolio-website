@@ -29,7 +29,7 @@ export function WorkGallery({
         <p className="eyebrow">{text.gallery.eyebrow}</p>
         <h2>{text.gallery.title}</h2>
       </div>
-      <div className="filter-row" aria-label={text.gallery.filtersAria}>
+      <div className="filter-row" role="group" aria-label={text.gallery.filtersAria}>
         {categories.map((category) => (
           <button
             key={category}
@@ -41,6 +41,15 @@ export function WorkGallery({
             {categoryLabels[language][category as keyof (typeof categoryLabels)[typeof language]]}
           </button>
         ))}
+        <a
+          className="portfolio-download-button"
+          href="/downloads/portfolio.pdf"
+          download="imoon-portfolio.pdf"
+          aria-label={text.gallery.downloadPortfolio}
+        >
+          <span className="portfolio-download-label">{text.gallery.downloadPortfolio}</span>
+          <span className="portfolio-download-icon" aria-hidden="true">PDF</span>
+        </a>
       </div>
       {filteredWorks.length > 0 ? (
         <div className="work-grid">

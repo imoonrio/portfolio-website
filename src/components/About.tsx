@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { copy, type Language } from '../i18n';
 
 type AboutProps = {
   language: Language;
+  onNavigateHome?: () => void;
 };
 
 type IconName = 'compass' | 'layers' | 'spark' | 'toolbox' | 'timeline' | 'contact';
@@ -78,7 +79,7 @@ function ProfilePortrait({ label }: { label: string }) {
   );
 }
 
-export function About({ language }: AboutProps) {
+export function About({ language, onNavigateHome }: AboutProps) {
   const text = copy[language];
   const summaryIcons: IconName[] = ['compass', 'layers', 'spark'];
 
@@ -126,7 +127,7 @@ export function About({ language }: AboutProps) {
             ))}
           </div>
         </section>
-        <ContactPanel language={language} id="contact" />
+        <ContactPanel language={language} id="contact" onNavigateHome={onNavigateHome} />
       </div>
     </footer>
   );
@@ -135,6 +136,7 @@ export function About({ language }: AboutProps) {
 type ContactPanelProps = {
   id?: string;
   language: Language;
+  onNavigateHome?: () => void;
 };
 
 function useIsMobileContact() {
@@ -165,7 +167,7 @@ function useIsMobileContact() {
   return isMobile;
 }
 
-export function ContactPanel({ id, language }: ContactPanelProps) {
+export function ContactPanel({ id, language, onNavigateHome }: ContactPanelProps) {
   const text = copy[language];
   const isMobile = useIsMobileContact();
   const [copyStatus, setCopyStatus] = useState('');
@@ -190,6 +192,14 @@ export function ContactPanel({ id, language }: ContactPanelProps) {
       setCopyStatus('');
     }, 2000);
   };
+  const handleHomeClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (!onNavigateHome) {
+      return;
+    }
+
+    event.preventDefault();
+    onNavigateHome();
+  };
 
   useEffect(() => {
     return () => {
@@ -205,7 +215,14 @@ export function ContactPanel({ id, language }: ContactPanelProps) {
       </h3>
       <div className="contact-grid">
         <div className="qr-placeholder">
-          <img src="/wechat.svg" alt={text.about.qrPlaceholder} draggable="false" loading="lazy" decoding="async" />
+          <img
+            src="/wechat.svg"
+            alt={text.about.qrPlaceholder}
+            data-saveable-image="true"
+            draggable="false"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
         <address>
           <button
@@ -233,7 +250,7 @@ export function ContactPanel({ id, language }: ContactPanelProps) {
               <span className="contact-arrow" aria-hidden="true" />
             </button>
           )}
-          <a className="contact-link" href="https://imoon.bbroot.com/" target="_blank" rel="noreferrer" aria-label={actions.site}>
+          <a className="contact-link" href="#top" aria-label={actions.site} onClick={handleHomeClick}>
             <span className="contact-link-value">{text.about.profile}</span>
             <span className="contact-arrow" aria-hidden="true" />
           </a>

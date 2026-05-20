@@ -98,6 +98,13 @@ export default function App() {
     setPendingScrollTarget(sectionId);
   };
 
+  const navigateHome = () => {
+    setSelectedWork(null);
+    setDetailWork(null);
+    setPendingScrollTarget(null);
+    scrollToTop();
+  };
+
   const showNextWork = () => {
     if (selectedWorkIndex < 0) {
       return;
@@ -108,6 +115,10 @@ export default function App() {
 
   useEffect(() => {
     const preventDefault = (event: Event) => {
+      if (event.target instanceof Element && event.target.closest('[data-saveable-image="true"]')) {
+        return;
+      }
+
       event.preventDefault();
     };
 
@@ -148,6 +159,7 @@ export default function App() {
     >
       <Header
         language={language}
+        onNavigateHome={navigateHome}
         onNavigateSection={detailWork ? navigateToSection : undefined}
         skinName={activeSkinName}
         onRandomSkin={randomizeSkin}
@@ -157,6 +169,7 @@ export default function App() {
       {!selectedWork ? (
         <FloatingHeader
           language={language}
+          onNavigateHome={navigateHome}
           onNavigateSection={detailWork ? navigateToSection : undefined}
           skinName={activeSkinName}
           onRandomSkin={randomizeSkin}
@@ -165,7 +178,7 @@ export default function App() {
         />
       ) : null}
       {detailWork ? (
-        <WorkProjectPage language={language} work={detailWork} />
+        <WorkProjectPage language={language} work={detailWork} onNavigateHome={navigateHome} />
       ) : (
         <>
           <main>
@@ -184,7 +197,7 @@ export default function App() {
               onSelectWork={setSelectedWork}
             />
           </main>
-          <About language={language} />
+          <About language={language} onNavigateHome={navigateHome} />
         </>
       )}
       <WorkDetail

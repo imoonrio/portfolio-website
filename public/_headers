@@ -13,3 +13,6 @@
 
 /works/slides/*
   Cache-Control: public, max-age=31536000, immutable
+
+/downloads/*
+  Cache-Control: public, max-age=86400

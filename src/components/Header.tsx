@@ -5,6 +5,7 @@ import { SiteActions } from './SiteActions';
 
 type HeaderProps = {
   language: Language;
+  onNavigateHome?: () => void;
   onNavigateSection?: (sectionId: 'work' | 'about' | 'contact') => void;
   onRandomSkin: () => void;
   onResetSkin: () => void;
@@ -14,6 +15,7 @@ type HeaderProps = {
 
 export function Header({
   language,
+  onNavigateHome,
   onNavigateSection,
   onRandomSkin,
   onResetSkin,
@@ -21,6 +23,14 @@ export function Header({
   skinName
 }: HeaderProps) {
   const text = copy[language];
+  const handleHomeClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (!onNavigateHome) {
+      return;
+    }
+
+    event.preventDefault();
+    onNavigateHome();
+  };
   const handleSectionClick =
     (sectionId: 'work' | 'about' | 'contact') => (event: MouseEvent<HTMLAnchorElement>) => {
       if (!onNavigateSection) {
@@ -33,7 +43,7 @@ export function Header({
 
   return (
     <header className="site-header">
-      <a className="brand" href="#top" aria-label={text.brandAria}>
+      <a className="brand" href="#top" aria-label={text.brandAria} onClick={handleHomeClick}>
         心月呈幅
       </a>
       <nav className="site-nav" aria-label={text.navLabel}>

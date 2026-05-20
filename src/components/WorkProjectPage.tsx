@@ -4,10 +4,11 @@ import { ContactPanel } from './About';
 
 type WorkProjectPageProps = {
   language: Language;
+  onNavigateHome?: () => void;
   work: Work;
 };
 
-export function WorkProjectPage({ language, work }: WorkProjectPageProps) {
+export function WorkProjectPage({ language, onNavigateHome, work }: WorkProjectPageProps) {
   const title = language === 'zh' ? work.titleZh : work.title;
   const description = language === 'zh' ? work.descriptionZh : work.description;
 
@@ -38,7 +39,7 @@ export function WorkProjectPage({ language, work }: WorkProjectPageProps) {
             </article>
           ))}
         </section>
-        <ContactPanel language={language} />
+        <ContactPanel language={language} onNavigateHome={onNavigateHome} />
       </div>
     </main>
   );

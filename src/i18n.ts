@@ -45,6 +45,7 @@ export const copy = {
       eyebrow: 'Work index',
       title: 'Recent projects',
       filtersAria: 'Work filters',
+      downloadPortfolio: 'Download portfolio PDF',
       empty: 'No works match this filter.',
       reset: 'Reset',
       openProject: 'Open project'
@@ -70,10 +71,10 @@ export const copy = {
       profile: '心月呈幅的小站',
       summary: [
         { label: 'Focus', value: 'Brand communication / Digital interface / Event visual system' },
-        { label: 'Role', value: 'Design direction, visual execution, cross-functional collaboration' },
+        { label: 'Personal capability', value: 'Design direction, visual execution, cross-functional collaboration' },
         { label: 'Strength', value: 'Translating business goals into structured, production-ready visual systems' }
       ],
-      skillsTitle: 'Professional skills',
+      skillsTitle: 'Design specialties',
       skills: [
         'Key visual design and campaign visual systems',
         'WeChat longform, social posters, and content operation design',
@@ -127,6 +128,7 @@ export const copy = {
       eyebrow: '作品索引',
       title: '近期项目',
       filtersAria: '作品筛选',
+      downloadPortfolio: '下载作品集 PDF',
       empty: '没有匹配该分类的作品。',
       reset: '重置',
       openProject: '打开项目'
@@ -152,10 +154,10 @@ export const copy = {
       profile: '心月呈幅的小站',
       summary: [
         { label: '核心方向', value: '品牌传播 / 数字界面 / 活动视觉系统' },
-        { label: '角色能力', value: '设计统筹、视觉执行、跨团队协作' },
+        { label: '个人能力', value: '设计统筹、视觉执行、跨团队协作' },
         { label: '专业优势', value: '将业务目标转译为清晰、有秩序、可落地的视觉方案' }
       ],
-      skillsTitle: '专业技能',
+      skillsTitle: '设计专长',
       skills: [
         '品牌 KV、活动主视觉与整合传播视觉系统',
         '微信公众号长图文、朋友圈海报、节日节气与热点传播设计',

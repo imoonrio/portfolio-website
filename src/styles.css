@@ -635,6 +635,7 @@ p {
 .filter-row {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 10px;
   margin-bottom: 30px;
 }
@@ -661,6 +662,47 @@ p {
 
 .filter-button:hover {
   transform: translateY(-1px);
+}
+
+.portfolio-download-button {
+  display: inline-flex;
+  margin-left: auto;
+  width: 46px;
+  height: 46px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--skin-accent);
+  border-radius: 999px;
+  background: var(--skin-accent);
+  color: var(--skin-accent-contrast);
+  box-shadow: var(--skin-shadow);
+  font-size: 11px;
+  font-weight: 820;
+  letter-spacing: 0;
+  line-height: 1;
+  transition:
+    transform 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.portfolio-download-button:hover,
+.portfolio-download-button:focus-visible {
+  color: var(--skin-accent);
+  background: var(--skin-surface-strong);
+  border-color: color-mix(in srgb, var(--skin-accent) 46%, var(--skin-border));
+  transform: translateY(-1px);
+}
+
+.portfolio-download-label {
+  display: none;
+}
+
+.portfolio-download-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .work-grid {
@@ -1417,6 +1459,13 @@ p {
   box-shadow: 0 10px 24px color-mix(in srgb, var(--skin-text) 10%, transparent);
 }
 
+.content-protected .qr-placeholder img {
+  pointer-events: auto;
+  -webkit-touch-callout: default;
+  user-select: auto;
+  -webkit-user-select: auto;
+}
+
 .contact-panel address {
   display: grid;
   grid-template-rows: repeat(3, minmax(0, 1fr));
@@ -1745,6 +1794,26 @@ p {
     min-height: 38px;
     padding: 0 12px;
     font-size: 13px;
+  }
+
+  .portfolio-download-button {
+    flex: 1 0 100%;
+    width: 100%;
+    height: 44px;
+    border-radius: 999px;
+    justify-content: center;
+    margin-left: 0;
+    padding: 0 16px;
+    font-size: 13px;
+    text-align: center;
+  }
+
+  .portfolio-download-label {
+    display: inline;
+  }
+
+  .portfolio-download-icon {
+    display: none;
   }
 
   .work-grid {
